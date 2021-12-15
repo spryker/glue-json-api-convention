@@ -7,11 +7,28 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention\Resource;
 
-use Spryker\Glue\GlueApplication\Resource\ResourceInterface;
+use Generated\Shared\Transfer\GlueResourceMethodCollectionTransfer;
+use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 
 interface JsonApiResourceInterface extends ResourceInterface
 {
+    /**
+     * @return string
+     */
     public function getName(): string;
 
+    /**
+     * @return string
+     */
     public function getResourceAttributesClassName(): string;
+
+    /**
+     * @return string
+     */
+    public function getController(): string;
+
+    /**
+     * @return \Generated\Shared\Transfer\GlueResourceMethodCollectionTransfer
+     */
+    public function getDeclaredMethods(): GlueResourceMethodCollectionTransfer;
 }

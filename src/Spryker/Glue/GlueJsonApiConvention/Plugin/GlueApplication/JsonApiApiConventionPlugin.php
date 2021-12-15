@@ -9,20 +9,16 @@ namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
-use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface;
-use Spryker\Glue\GlueApplication\Resource\MissingResource;
-use Spryker\Glue\GlueApplication\Resource\ResourceInterface;
-use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRoutePluginInterface;
+use Spryker\Glue\GlueApplication\ApiApplication\Type\RequestFlowAwareApiApplication;
+use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
-use Spryker\Glue\Kernel\AbstractPlugin;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConventionPluginInterface
+class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implements ApiConventionPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
@@ -89,41 +85,19 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
      * @api
      *
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Spryker\Glue\GlueApplication\Resource\ResourceInterface
-     */
-    public function route(GlueRequestTransfer $glueRequestTransfer, array $routes): ResourceInterface
-    {
-        foreach ($this->getFactory()->getRouteMatcherPlugins() as $routeMatcherPlugin) {
-            $resource = $routeMatcherPlugin->route($glueRequestTransfer, $routes);
-
-            if ($resource instanceof MissingResource === false) {
-                break;
-            }
-        }
-
-        return $resource ?? new MissingResource(Response::HTTP_BAD_REQUEST, 'No route found');
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRoutePluginInterface $resourceRoutePlugin
+     * @param \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface $resource
      *
      * @return \Generated\Shared\Transfer\GlueRequestValidationTransfer
      */
     public function validateRequestAfterRouting(
         GlueRequestTransfer $glueRequestTransfer,
-        ResourceRoutePluginInterface $resourceRoutePlugin
+        ResourceInterface $resource
     ): GlueRequestValidationTransfer {
         foreach ($this->getFactory()->getRequestAfterRoutingValidatorPlugins() as $validateRequestAfterRoutingPlugin) {
-            $glueRequestValidationTransfer = $validateRequestAfterRoutingPlugin->validateRequest($glueRequestTransfer, $resourceRoutePlugin);
+            $glueRequestValidationTransfer = $validateRequestAfterRoutingPlugin->validateRequest($glueRequestTransfer, $resource);
         }
 
-        return $glueRequestValidationTransfer ?? new GlueRequestValidationTransfer();
+        return $glueRequestValidationTransfer ?? (new GlueRequestValidationTransfer())->setIsValid(true);
     }
 
     /**
@@ -131,22 +105,15 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
      *
      * @api
      *
-     * @param \Spryker\Glue\GlueApplication\Resource\ResourceInterface $resource
+     * @param \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface $resource
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return \Generated\Shared\Transfer\GlueResponseTransfer
      */
     public function executeResource(ResourceInterface $resource, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
-        foreach ($this->getFactory()->getResourceExecutorPlugins() as $executeResourcePlugin) {
-            $glueResponseTransfer = $executeResourcePlugin->execute($resource, $glueRequestTransfer);
-
-            if ($glueResponseTransfer->getResource() instanceof GlueResourceTransfer) {
-                break;
-            }
-        }
-
-        return $glueResponseTransfer;
+        // TODO: plugins were here, but they are not required, there is one way to execute for convention.
+        return $this->getFactory()->createJsonApiResourceExecutor()->executeResource($resource, $glueRequestTransfer);
     }
 
     /**
@@ -166,10 +133,5 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
         }
 
         return $glueResponseTransfer;
-    }
-
-    public function getRoutes(): array
-    {
-        return [];
     }
 }

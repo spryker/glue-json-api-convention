@@ -9,12 +9,12 @@ namespace Spryker\Glue\GlueJsonApiConvention\Resource;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\GlueApplication\Resource\ResourceInterface;
+use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 
 interface JsonApiResourceExecutorInterface
 {
     /**
-     * @param \Spryker\Glue\GlueApplication\Resource\ResourceInterface $resource
+     * @param \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface $resource
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return \Generated\Shared\Transfer\GlueResponseTransfer
