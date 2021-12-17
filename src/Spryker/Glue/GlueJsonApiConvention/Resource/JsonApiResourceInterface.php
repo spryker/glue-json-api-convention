@@ -20,11 +20,6 @@ interface JsonApiResourceInterface extends ResourceInterface
     /**
      * @return string
      */
-    public function getResourceAttributesClassName(): string;
-
-    /**
-     * @return string
-     */
     public function getController(): string;
 
     /**

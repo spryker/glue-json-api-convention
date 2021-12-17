@@ -10,6 +10,8 @@ namespace Spryker\Glue\GlueJsonApiConvention\Resource;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
+use Spryker\Glue\StoresRestApi\Controller\StoresResourceController;
+use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 
 class JsonApiResourceExecutor implements JsonApiResourceExecutorInterface
 {
@@ -32,18 +34,23 @@ class JsonApiResourceExecutor implements JsonApiResourceExecutorInterface
      *
      * @return \Generated\Shared\Transfer\GlueResponseTransfer
      */
+
+    // TODO: move to GlueApplication
     public function executeResource(ResourceInterface $resource, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
         $glueResponseTransfer = new GlueResponseTransfer();
 
-        // TODO: check if this ever happens. The non-JsonApiResourceInterface are filtered out in routing.
-        if (!$resource instanceof JsonApiResourceInterface) {
-            return $glueResponseTransfer;
-        }
-
         $executableResource = $resource->getResource($glueRequestTransfer);
 
         if ($glueRequestTransfer->getContent()) {
+            // TODO: find this class through reflection
+//            $executable1 = [StoresResourceController::class, 'getAction'];
+//            $method1 = new ReflectionMethod($executable1[0], $executable1[1]);
+//            $method1->getParameters()[0]->getType()->getName(); // [controller, action] first parameter
+//
+//            $executable2 = function(AbstractTransfer $transfer) {};
+//            $method2 = new ReflectionFunction($executable2);
+//            $method2->getParameters()[0]->getType()->getName(); // closure first parameter
             $transferClass = $resource->getResourceAttributesClassName();
             $resourceAttributesTransfer = new $transferClass();
 
