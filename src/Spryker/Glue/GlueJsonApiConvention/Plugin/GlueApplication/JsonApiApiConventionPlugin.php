@@ -28,7 +28,7 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
     public function isApplicable(GlueRequestTransfer $glueRequestTransfer): bool
     {
         //TODO: remove 1
-        return 1 || $glueRequestTransfer->getMeta()['content-type'] === 'application/vnd.api-json';
+        return 0 || $glueRequestTransfer->getMeta()['content-type'] === 'application/vnd.api-json';
     }
 
     /**
