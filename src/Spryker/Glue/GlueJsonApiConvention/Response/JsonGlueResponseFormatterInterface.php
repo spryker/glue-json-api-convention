@@ -7,6 +7,7 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
+use ArrayObject;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 
 interface JsonGlueResponseFormatterInterface
@@ -30,4 +31,12 @@ interface JsonGlueResponseFormatterInterface
      * @return string
      */
     public function formatResponseWithEmptyResource(GlueRequestTransfer $glueRequestTransfer): string;
+
+    /**
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\RestErrorMessageTransfer> $restErrorMessageTransfers
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return string
+     */
+    public function formatErrorResponse(ArrayObject $restErrorMessageTransfers, GlueRequestTransfer $glueRequestTransfer): string;
 }

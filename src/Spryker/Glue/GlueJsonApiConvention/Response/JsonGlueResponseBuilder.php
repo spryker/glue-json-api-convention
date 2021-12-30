@@ -37,6 +37,16 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         GlueResponseTransfer $glueResponseTransfer,
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        if ($glueResponseTransfer->getErrors()->count()) {
+            $content = $this->jsonGlueResponseFormatter->formatErrorResponse(
+                $glueResponseTransfer->getErrors(),
+                $glueRequestTransfer
+            );
+            $glueResponseTransfer->setContent($content);
+
+            return $glueResponseTransfer;
+        }
+
         $mainResource = $glueResponseTransfer->getResource();
 
         if (!$mainResource) {

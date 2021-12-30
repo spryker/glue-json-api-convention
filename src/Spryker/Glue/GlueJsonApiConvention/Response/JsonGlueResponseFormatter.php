@@ -7,6 +7,7 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
+use ArrayObject;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
@@ -33,6 +34,11 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
      * @var string
      */
     protected const RESPONSE_DATA = 'data';
+
+    /**
+     * @var string
+     */
+    protected const RESPONSE_ERRORS = 'errors';
 
     /**
      * @var string
@@ -78,7 +84,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     ): string {
         $responseData = [];
         $responseData[static::RESPONSE_DATA] = $this->getResourceData($mainResource);
-        $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
+        //$responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
 
         if (!$glueRequestTransfer->getExcludeRelationships()) {
             $responseData[static::RESPONSE_INCLUDED] = [];
@@ -108,9 +114,28 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     {
         $responseData = [];
         $responseData[static::RESPONSE_DATA] = [];
-        $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
+//        $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
 
         return $this->jsonEncoder->encode($responseData);
+    }
+
+    /**
+     * *
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\RestErrorMessageTransfer> $restErrorMessageTransfers
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return string
+     */
+    public function formatErrorResponse(
+        ArrayObject $restErrorMessageTransfers,
+        GlueRequestTransfer $glueRequestTransfer
+    ): string {
+        $response = [];
+        foreach ($restErrorMessageTransfers as $restErrorMessageTransfer) {
+            $response[static::RESPONSE_ERRORS][] = $restErrorMessageTransfer->toArray();
+        }
+
+        return $this->jsonEncoder->encode($response);
     }
 
     /**
