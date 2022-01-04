@@ -16,14 +16,4 @@ interface JsonApiResourceInterface extends ResourceInterface
      * @return string
      */
     public function getName(): string;
-
-    /**
-     * @return string
-     */
-    public function getController(): string;
-
-    /**
-     * @return \Generated\Shared\Transfer\GlueResourceMethodCollectionTransfer
-     */
-    public function getDeclaredMethods(): GlueResourceMethodCollectionTransfer;
 }
