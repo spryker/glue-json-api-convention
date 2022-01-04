@@ -8,6 +8,7 @@
 namespace Spryker\Glue\GlueJsonApiConvention;
 
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceBridge;
+use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\AttributesRequestBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\JsonApiResponseBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\RequestSparseFieldBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\RouterMatcherPlugin;
@@ -186,6 +187,7 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     {
         return [
             new RequestSparseFieldBuilderPlugin(),
+            new AttributesRequestBuilderPlugin(),
         ];
     }
 

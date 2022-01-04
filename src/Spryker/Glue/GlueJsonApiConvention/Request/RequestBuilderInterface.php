@@ -9,7 +9,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Request;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 
-interface RequestSparseFieldBuilderInterface
+interface RequestBuilderInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer

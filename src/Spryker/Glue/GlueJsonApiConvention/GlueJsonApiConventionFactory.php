@@ -15,6 +15,8 @@ use Spryker\Glue\GlueJsonApiConvention\Decoder\JsonDecoder;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\JsonEncoder;
+use Spryker\Glue\GlueJsonApiConvention\Request\AttributesRequestBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
@@ -44,17 +46,17 @@ use Spryker\Shared\Kernel\ClassResolver\Controller\AbstractControllerResolver;
 class GlueJsonApiConventionFactory extends AbstractFactory
 {
     /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilderInterface
+     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
      */
-    public function createRequestSparseFieldBuilder(): RequestSparseFieldBuilderInterface
+    public function createRequestSparseFieldBuilder(): RequestBuilderInterface
     {
         return new RequestSparseFieldBuilder();
     }
 
     /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilderInterface
+     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
      */
-    public function createRequestRelationshipBuilder(): RequestRelationshipBuilderInterface
+    public function createRequestRelationshipBuilder(): RequestBuilderInterface
     {
         return new RequestRelationshipBuilder();
     }
@@ -223,5 +225,13 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     public function getResponseFormatterPlugins(): array
     {
         return $this->getProvidedDependency(GlueJsonApiConventionDependencyProvider::PLUGINS_RESPONSE_FORMATTER);
+    }
+
+    /**
+     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
+     */
+    public function createAttributesRequestBuilder(): RequestBuilderInterface
+    {
+        return new AttributesRequestBuilder($this->getUtilEncodingService());
     }
 }

@@ -9,7 +9,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Request;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 
-class RequestRelationshipBuilder implements RequestRelationshipBuilderInterface
+class RequestRelationshipBuilder implements RequestBuilderInterface
 {
     /**
      * @var string

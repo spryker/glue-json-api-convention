@@ -10,7 +10,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Request;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueSparseResourceTransfer;
 
-class RequestSparseFieldBuilder implements RequestSparseFieldBuilderInterface
+class RequestSparseFieldBuilder implements RequestBuilderInterface
 {
     /**
      * @var string
