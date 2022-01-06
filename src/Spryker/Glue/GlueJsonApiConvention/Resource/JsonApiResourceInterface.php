@@ -12,8 +12,4 @@ use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 
 interface JsonApiResourceInterface extends ResourceInterface
 {
-    /**
-     * @return string
-     */
-    public function getName(): string;
 }
