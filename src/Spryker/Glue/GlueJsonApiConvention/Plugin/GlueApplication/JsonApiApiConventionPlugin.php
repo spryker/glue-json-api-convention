@@ -27,8 +27,7 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
      */
     public function isApplicable(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        //TODO: remove 1
-        return 1 || $glueRequestTransfer->getMeta()['content-type'] === 'application/vnd.api-json';
+        return $glueRequestTransfer->getMeta()['content-type'] === 'application/vnd.api-json';
     }
 
     /**
@@ -95,6 +94,10 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
     ): GlueRequestValidationTransfer {
         foreach ($this->getFactory()->getRequestAfterRoutingValidatorPlugins() as $validateRequestAfterRoutingPlugin) {
             $glueRequestValidationTransfer = $validateRequestAfterRoutingPlugin->validateRequest($glueRequestTransfer, $resource);
+
+            if ($glueRequestValidationTransfer->getIsValid() === false) {
+                break;
+            }
         }
 
         return $glueRequestValidationTransfer ?? (new GlueRequestValidationTransfer())->setIsValid(true);
