@@ -18,25 +18,15 @@ use Spryker\Glue\GlueJsonApiConvention\Encoder\JsonEncoder;
 use Spryker\Glue\GlueJsonApiConvention\Request\AttributesRequestBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Resource\JsonApiResourceExecutor;
-use Spryker\Glue\GlueJsonApiConvention\Resource\JsonApiResourceExecutorInterface;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceExtractor;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceExtractorInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestResourcePluginFilter;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestResourcePluginFilterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestRoutingMatcher;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestRoutingMatcherInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
 use Spryker\Shared\Kernel\ClassResolver\Controller\AbstractControllerResolver;
 
@@ -59,35 +49,6 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     public function createRequestRelationshipBuilder(): RequestBuilderInterface
     {
         return new RequestRelationshipBuilder();
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceExtractorInterface
-     */
-    public function createResourceExtractor(): ResourceExtractorInterface
-    {
-        return new ResourceExtractor(
-            $this->createJsonDecoder(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Router\RequestRoutingMatcherInterface
-     */
-    public function createRequestRoutingMatcher(): RequestRoutingMatcherInterface
-    {
-        return new RequestRoutingMatcher(
-            $this->createRequestResourcePluginFilter(),
-            $this->createResourceBuilder(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Router\RequestResourcePluginFilterInterface
-     */
-    protected function createRequestResourcePluginFilter(): RequestResourcePluginFilterInterface
-    {
-        return new RequestResourcePluginFilter();
     }
 
     /**
@@ -130,16 +91,6 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     public function createJsonEncoder(): EncoderInterface
     {
         return new JsonEncoder($this->getUtilEncodingService());
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Resource\JsonApiResourceExecutorInterface
-     */
-    public function createJsonApiResourceExecutor(): JsonApiResourceExecutorInterface
-    {
-        return new JsonApiResourceExecutor(
-            $this->createResourceExtractor(),
-        );
     }
 
     /**
@@ -196,27 +147,11 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     }
 
     /**
-     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RouteMatcherPluginInterface>
-     */
-    public function getRouteMatcherPlugins(): array
-    {
-        return $this->getProvidedDependency(GlueJsonApiConventionDependencyProvider::PLUGINS_ROUTE_MATCHER);
-    }
-
-    /**
      * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestAfterRoutingValidatorPluginInterface>
      */
     public function getRequestAfterRoutingValidatorPlugins(): array
     {
         return $this->getProvidedDependency(GlueJsonApiConventionDependencyProvider::PLUGINS_REQUEST_AFTER_ROUTING_VALIDATOR);
-    }
-
-    /**
-     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceExecutorInterface>
-     */
-    public function getResourceExecutorPlugins(): array
-    {
-        return $this->getProvidedDependency(GlueJsonApiConventionDependencyProvider::PLUGINS_RESOURCE_EXECUTOR);
     }
 
     /**
@@ -232,6 +167,6 @@ class GlueJsonApiConventionFactory extends AbstractFactory
      */
     public function createAttributesRequestBuilder(): RequestBuilderInterface
     {
-        return new AttributesRequestBuilder($this->getUtilEncodingService());
+        return new AttributesRequestBuilder($this->createJsonDecoder());
     }
 }

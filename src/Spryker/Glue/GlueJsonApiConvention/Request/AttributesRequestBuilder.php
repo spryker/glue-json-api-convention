@@ -8,18 +8,19 @@
 namespace Spryker\Glue\GlueJsonApiConvention\Request;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
 
 class AttributesRequestBuilder implements RequestBuilderInterface
 {
-    protected GlueJsonApiConventionToUtilEncodingServiceInterface $utilEncodingService;
+    protected DecoderInterface $decoder;
 
     /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface $utilEncodingService
+     * @param \Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface $decoder
      */
-    public function __construct(GlueJsonApiConventionToUtilEncodingServiceInterface $utilEncodingService)
+    public function __construct(DecoderInterface $decoder)
     {
-        $this->utilEncodingService = $utilEncodingService;
+        $this->decoder = $decoder;
     }
 
     /**
@@ -33,7 +34,7 @@ class AttributesRequestBuilder implements RequestBuilderInterface
             return $glueRequestTransfer;
         }
 
-        $decodedContent = $this->utilEncodingService->decodeJson($glueRequestTransfer->getContent(), true);
+        $decodedContent = $this->decoder->decode($glueRequestTransfer->getContent());
         if (!$decodedContent || !isset($decodedContent['data']) || !isset($decodedContent['data']['attributes'])) {
             return $glueRequestTransfer;
         }

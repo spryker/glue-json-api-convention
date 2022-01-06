@@ -105,22 +105,6 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
      *
      * @api
      *
-     * @param \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface $resource
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
-    public function executeResource(ResourceInterface $resource, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
-    {
-        // TODO: plugins were here, but they are not required, there is one way to execute for convention.
-        return $this->getFactory()->createJsonApiResourceExecutor()->executeResource($resource, $glueRequestTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
