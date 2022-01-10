@@ -14,11 +14,13 @@ use Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterfac
 use Spryker\Glue\GlueApplication\ApiApplication\Type\RequestFlowAwareApiApplication;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
+use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\JsonApiResourceInterface;
+use Spryker\Glue\GlueRestApiConventionExtension\Dependency\Plugin\RestResourceInterface;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implements ApiConventionPluginInterface
+class JsonApiApiConventionPlugin implements ApiConventionPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
@@ -39,6 +41,14 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
     }
 
     /**
+     * @return string
+     */
+    public function getResourceType(): string
+    {
+        return JsonApiResourceInterface::class;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @api
@@ -49,6 +59,8 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
      */
     public function buildRequest(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
+        $glueRequestTransfer->setConvention($this->getName());
+
         foreach ($this->getFactory()->getRequestBuilderPlugins() as $builderRequestPlugin) {
             $glueRequestTransfer = $builderRequestPlugin->build($glueRequestTransfer);
         }
