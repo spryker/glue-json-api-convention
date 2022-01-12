@@ -16,11 +16,12 @@ use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\JsonApiResourceInterface;
 use Spryker\Glue\GlueRestApiConventionExtension\Dependency\Plugin\RestResourceInterface;
+use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class JsonApiApiConventionPlugin implements ApiConventionPluginInterface
+class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConventionPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
@@ -29,7 +30,7 @@ class JsonApiApiConventionPlugin implements ApiConventionPluginInterface
      */
     public function isApplicable(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        return $glueRequestTransfer->getMeta()['content-type'] === 'application/vnd.api-json';
+        return $glueRequestTransfer->getMeta()['content-type'][0] === 'application/vnd.api-json';
     }
 
     /**
