@@ -12,6 +12,9 @@ use Spryker\Shared\GlueJsonApiConvention\GlueJsonApiConventionConstants;
 
 class GlueJsonApiConventionConfig extends AbstractBundleConfig
 {
+    /**
+     * @var string
+     */
     public const CONVENTION_JSON_API = 'json_api';
 
     /**

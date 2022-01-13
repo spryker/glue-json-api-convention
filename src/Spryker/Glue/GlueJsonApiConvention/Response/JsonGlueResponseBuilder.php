@@ -8,9 +8,7 @@
 namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface;
 
 class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
 {
@@ -45,7 +43,7 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         if ($glueResponseTransfer->getErrors()->count()) {
             $content = $this->jsonGlueResponseFormatter->formatErrorResponse(
                 $glueResponseTransfer->getErrors(),
-                $glueRequestTransfer
+                $glueRequestTransfer,
             );
             $glueResponseTransfer->setContent($content);
 
@@ -81,7 +79,7 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
                     $sparseFields[$sparseResource->getResourceType()] = [];
                 }
 
-            $sparseFields[$sparseResource->getResourceType()] = $sparseResource->getFields();
+                $sparseFields[$sparseResource->getResourceType()] = $sparseResource->getFields();
             }
         }
 

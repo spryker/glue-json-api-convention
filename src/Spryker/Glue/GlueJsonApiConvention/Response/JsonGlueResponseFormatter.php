@@ -9,7 +9,6 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use ArrayObject;
 use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Symfony\Component\HttpFoundation\Request;
@@ -126,6 +125,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
 
     /**
      * *
+     *
      * @param \ArrayObject<int, \Generated\Shared\Transfer\RestErrorMessageTransfer> $restErrorMessageTransfers
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *

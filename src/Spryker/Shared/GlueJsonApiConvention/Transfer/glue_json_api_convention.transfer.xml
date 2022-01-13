@@ -33,4 +33,13 @@
         <property name="detail" type="string"/>
         <property name="status" type="int"/>
     </transfer>
+
+    <transfer name="GlueRequestValidation">
+    </transfer>
+
+    <transfer name="Abstract">
+    </transfer>
+
+    <transfer name="GlueLink">
+    </transfer>
 </transfers>
