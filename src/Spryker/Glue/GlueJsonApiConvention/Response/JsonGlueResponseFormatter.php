@@ -9,6 +9,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use ArrayObject;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,21 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     protected const LINK_SELF = 'self';
 
     /**
+     * @var string
+     */
+    protected const RESOURCE_TYPE = 'type';
+
+    /**
+     * @var string
+     */
+    protected const RESOURCE_ID = 'id';
+
+    /**
+     * @var string
+     */
+    protected const RESOURCE_ATTRIBUTES = 'attributes';
+
+    /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface
      */
     protected $jsonEncoder;
@@ -71,35 +87,24 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
-     * @param array<string, mixed> $mainResource
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
      * @param array<string, mixed> $sparseFields
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string
      */
     public function formatResponseData(
-        array $mainResource,
+        array $glueResources,
         array $sparseFields,
         GlueRequestTransfer $glueRequestTransfer
     ): string {
+        $data = $this->getResourceData($glueResources, $glueRequestTransfer);
         $responseData = [];
-        $responseData[static::RESPONSE_DATA] = $this->getResourceData($mainResource);
-        //$responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
-
-        if (!$glueRequestTransfer->getExcludeRelationships()) {
-            $responseData[static::RESPONSE_INCLUDED] = [];
-            foreach ($mainResource[static::RESPONSE_RELATIONSHIPS] as $relationshipType => $relationship) {
-                $responseData[static::RESPONSE_DATA][static::RESPONSE_RELATIONSHIPS][$relationshipType][static::RESPONSE_LINKS] = $relationship[static::RESPONSE_LINKS];
-                if ($sparseFields && isset($sparseFields[$relationshipType])) {
-                    $relationshipData = [];
-                    foreach ($sparseFields[$relationshipType] as $sparseField) {
-                        $relationshipData[$sparseField] = $relationship[$sparseField];
-                    }
-                    $responseData[static::RESPONSE_INCLUDED][$relationshipType] = $relationshipData;
-                } else {
-                    $responseData[static::RESPONSE_INCLUDED][$relationshipType] = $this->getResourceData($relationship);
-                }
-            }
+        if ($this->isSingleObjectRequest($glueRequestTransfer, $glueResources)) {
+            $responseData[static::RESPONSE_DATA] = $data[0];
+        } else {
+            $responseData[static::RESPONSE_DATA] = $data;
+            $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
         }
 
         return $this->jsonEncoder->encode($responseData);
@@ -114,7 +119,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     {
         $responseData = [];
         $responseData[static::RESPONSE_DATA] = [];
-//        $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
+        $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
 
         return $this->jsonEncoder->encode($responseData);
     }
@@ -146,11 +151,11 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     protected function buildCollectionLink(GlueRequestTransfer $glueRequestTransfer): array
     {
         $method = $glueRequestTransfer->getMethod();
-        $idResource = $glueRequestTransfer->getResource()->getId();
+        $idResource = $glueRequestTransfer->getResourceOrFail()->getId();
 
         if ($method === Request::METHOD_GET && ($idResource === null || $this->isCurrentUserCollectionResource($idResource))) {
             $linkParts = [];
-            $linkParts[] = $glueRequestTransfer->getResource()->getType();
+            $linkParts[] = $glueRequestTransfer->getResourceOrFail()->getType();
             if ($this->isCurrentUserCollectionResource($idResource)) {
                 $linkParts[] = static::COLLECTION_IDENTIFIER_CURRENT_USER;
             }
@@ -165,23 +170,36 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
-     * @param array<string, mixed> $mainResource
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
-    protected function getResourceData(array $mainResource): array
+    protected function getResourceData(array $glueResources, GlueRequestTransfer $glueRequestTransfer): array
     {
-        $resourceData = [];
-        foreach ($mainResource as $field => $value) {
-            if ($field === static::RESPONSE_RELATIONSHIPS) {
-                continue;
+        $resourcesData = [];
+        foreach ($glueResources as $resource) {
+            $resource = $resource->toArray();
+            $resourceData = [];
+            if (!$resource[static::RESPONSE_LINKS]) {
+                $link = $resource[static::RESOURCE_TYPE];
+                if ($resource[static::RESOURCE_ID]) {
+                    $link .= '/' . $resource[static::RESOURCE_ID];
+                }
+                $queryString = $this->buildQueryString($glueRequestTransfer);
+
+                $resource[static::RESPONSE_LINKS] = $this->formatLinks([static::LINK_SELF => $link . $queryString]);
             }
-            if ($value) {
-                $resourceData[$field] = $value;
+
+            foreach ($resource as $field => $value) {
+                if ($value) {
+                    $resourceData[$field] = $value;
+                }
             }
+            $resourcesData[] = $resourceData;
         }
 
-        return $resourceData;
+        return $resourcesData;
     }
 
     /**
@@ -195,6 +213,20 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
+     *
+     * @return bool
+     */
+    protected function isSingleObjectRequest(GlueRequestTransfer $glueRequestTransfer, array $glueResources): bool
+    {
+        $id = $glueRequestTransfer->getResourceOrFail()->getId();
+        $method = $glueRequestTransfer->getMethod();
+
+        return count($glueResources) === 1 && (($id && $id !== static::COLLECTION_IDENTIFIER_CURRENT_USER) || $method === Request::METHOD_POST);
+    }
+
+    /**
      * @param array<string, string> $links
      *
      * @return array<string, string>
@@ -203,7 +235,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     {
         $formattedLinks = [];
 
-        $domainName = $this->jsonApiConventionConfig->getGlueDomainName();
+        $domainName = $this->jsonApiConventionConfig->getGlueDomain();
 
         foreach ($links as $key => $link) {
             $formattedLinks[$key] = $domainName . '/' . $link;
@@ -222,12 +254,12 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         $queryFields = $glueRequestTransfer->getQueryFields();
         $queryString = '';
 
-        foreach ($queryFields as $queryType => $queryField) {
-            $queryString .= $queryType . '=' . implode(',', $queryField);
-        }
+        if ($queryFields) {
+            $queryString = urldecode(http_build_query($queryFields));
 
-        if (mb_strlen($queryString)) {
-            $queryString = '?' . $queryString;
+            if (mb_strlen($queryString)) {
+                $queryString = '?' . $queryString;
+            }
         }
 
         return $queryString;

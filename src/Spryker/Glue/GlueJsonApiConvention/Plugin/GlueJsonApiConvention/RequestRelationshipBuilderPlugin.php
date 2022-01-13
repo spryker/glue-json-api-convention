@@ -12,7 +12,7 @@ use Spryker\Glue\GlueStorefrontApiApplicationExtension\Dependency\Plugin\Request
 use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
- * @method \Spryker\Glue\StorefrontApiApplicationGlueJsonApiConventionConnector\StorefrontApiApplicationGlueJsonApiConventionConnectorFactory getFactory()
+ * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
 class RequestRelationshipBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
 {
@@ -27,6 +27,6 @@ class RequestRelationshipBuilderPlugin extends AbstractPlugin implements Request
      */
     public function build(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
-        return $this->getFactory()->getGlueJsonApiConventionResource()->buildRequestRelationship($glueRequestTransfer);
+        return $this->getFactory()->createRequestRelationshipBuilder()->extract($glueRequestTransfer);
     }
 }

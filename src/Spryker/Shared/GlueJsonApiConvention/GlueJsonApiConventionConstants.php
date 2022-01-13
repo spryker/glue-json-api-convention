@@ -12,7 +12,6 @@ namespace Spryker\Shared\GlueJsonApiConvention;
  */
 interface GlueJsonApiConventionConstants
 {
-    // TODO get approve from Eugenia
     /**
      * Specification:
      * - The domain name used for Glue application.

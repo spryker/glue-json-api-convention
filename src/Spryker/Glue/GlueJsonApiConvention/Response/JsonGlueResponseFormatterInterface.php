@@ -13,14 +13,14 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 interface JsonGlueResponseFormatterInterface
 {
     /**
-     * @param array<string, mixed> $mainResource
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
      * @param array<string, mixed> $sparseFields
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string
      */
     public function formatResponseData(
-        array $mainResource,
+        array $glueResources,
         array $sparseFields,
         GlueRequestTransfer $glueRequestTransfer
     ): string;

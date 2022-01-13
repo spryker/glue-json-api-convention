@@ -25,6 +25,12 @@
         <property name="content" type="string"/>
         <property name="format" type="string"/>
         <property name="attributes" type="Abstract"/>
-        <property name="resource" type="GlueResource"/>
+        <property name="resources" type="GlueResource[]" singular="resource"/>
+        <property name="errors" type="GlueError[]" singular="error"/>
+    </transfer>
+    <transfer name="GlueError">
+        <property name="code" type="string"/>
+        <property name="detail" type="string"/>
+        <property name="status" type="int"/>
     </transfer>
 </transfers>

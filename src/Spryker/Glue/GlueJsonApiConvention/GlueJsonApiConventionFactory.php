@@ -7,8 +7,6 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention;
 
-use Spryker\Glue\GlueJsonApiConvention\ContentTypeExtractor\ContentTypeExtractor;
-use Spryker\Glue\GlueJsonApiConvention\ContentTypeExtractor\ContentTypeExtractorInterface;
 use Spryker\Glue\GlueJsonApiConvention\Controller\ControllerResolver;
 use Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Decoder\JsonDecoder;
@@ -67,14 +65,6 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     protected function createControllerResolver(): AbstractControllerResolver
     {
         return new ControllerResolver();
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\ContentTypeExtractor\ContentTypeExtractorInterface
-     */
-    public function createContentTypeExtractor(): ContentTypeExtractorInterface
-    {
-        return new ContentTypeExtractor();
     }
 
     /**

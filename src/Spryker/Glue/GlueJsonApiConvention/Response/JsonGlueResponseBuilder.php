@@ -15,6 +15,11 @@ use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelati
 class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
 {
     /**
+     * @var string
+     */
+    protected const HEADER_CONTENT_TYPE = 'application/vnd.api+json';
+
+    /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface
      */
     protected $jsonGlueResponseFormatter;
@@ -47,16 +52,15 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
             return $glueResponseTransfer;
         }
 
-        $mainResource = $glueResponseTransfer->getResource();
-
-        if (!$mainResource) {
+        if (count($glueResponseTransfer->getResources()) === 0) {
             return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseWithEmptyResource($glueRequestTransfer));
         }
 
+        $glueResponseTransfer->setFormat(static::HEADER_CONTENT_TYPE);
         $sparseFields = $this->getSparseFields($glueRequestTransfer);
 
         return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseData(
-            $mainResource->toArray(),
+            $glueResponseTransfer->getResources()->getArrayCopy(),
             $sparseFields,
             $glueRequestTransfer,
         ));
@@ -72,14 +76,13 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         $sparseFields = [];
 
         foreach ($glueRequestTransfer->getSparseResources() as $sparseResource) {
-            if (!$sparseResource->getResourceType()) {
-                continue;
-            }
-            if (!array_key_exists($sparseResource->getResourceType(), $sparseFields)) {
-                $sparseFields[$sparseResource->getResourceType()] = [];
-            }
+            if ($sparseResource->getResourceType()) {
+                if (!array_key_exists($sparseResource->getResourceTypeOrFail(), $sparseFields)) {
+                    $sparseFields[$sparseResource->getResourceType()] = [];
+                }
 
             $sparseFields[$sparseResource->getResourceType()] = $sparseResource->getFields();
+            }
         }
 
         return $sparseFields;

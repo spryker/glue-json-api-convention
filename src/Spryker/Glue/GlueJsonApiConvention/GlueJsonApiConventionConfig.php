@@ -22,7 +22,7 @@ class GlueJsonApiConventionConfig extends AbstractBundleConfig
      *
      * @return string
      */
-    public function getGlueDomainName(): string
+    public function getGlueDomain(): string
     {
         return $this->get(GlueJsonApiConventionConstants::GLUE_DOMAIN);
     }
