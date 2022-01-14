@@ -24,9 +24,7 @@ class RequestSparseFieldBuilder implements RequestBuilderInterface
      */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
-        $queryParameters = [];
-        parse_str(parse_url($glueRequestTransfer->getPath(), PHP_URL_QUERY), $queryParameters);
-        $glueRequestTransfer->setQueryFields($queryParameters);
+        $queryParameters = $glueRequestTransfer->getQueryFields();
 
         if (
             !isset($queryParameters[static::QUERY_FIELDS]) ||
