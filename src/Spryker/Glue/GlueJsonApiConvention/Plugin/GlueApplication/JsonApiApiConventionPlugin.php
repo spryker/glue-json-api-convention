@@ -11,11 +11,9 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface;
-use Spryker\Glue\GlueApplication\ApiApplication\Type\RequestFlowAwareApiApplication;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\JsonApiResourceInterface;
-use Spryker\Glue\GlueRestApiConventionExtension\Dependency\Plugin\RestResourceInterface;
 use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
@@ -30,7 +28,7 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
      */
     public function isApplicable(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        return $glueRequestTransfer->getMeta()['content-type'][0] === 'application/vnd.api-json';
+        return array_key_exists('content-type', $glueRequestTransfer->getMeta()) && $glueRequestTransfer->getMeta()['content-type'][0] === 'application/vnd.api-json';
     }
 
     /**

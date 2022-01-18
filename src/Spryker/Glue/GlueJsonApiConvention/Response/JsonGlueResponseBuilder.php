@@ -9,25 +9,28 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
+use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 
 class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
 {
-    /**
-     * @var string
-     */
-    protected const HEADER_CONTENT_TYPE = 'application/vnd.api+json';
-
     /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface
      */
     protected $jsonGlueResponseFormatter;
 
     /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter
+     * @var \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig
      */
-    public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter)
+    protected $jsonApiConventionConfig;
+
+    /**
+     * @param \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter
+     * @param \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig $jsonApiConventionConfig
+     */
+    public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter, GlueJsonApiConventionConfig $jsonApiConventionConfig)
     {
         $this->jsonGlueResponseFormatter = $jsonGlueResponseFormatter;
+        $this->jsonApiConventionConfig = $jsonApiConventionConfig;
     }
 
     /**
@@ -54,7 +57,7 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
             return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseWithEmptyResource($glueRequestTransfer));
         }
 
-        $glueResponseTransfer->setFormat(static::HEADER_CONTENT_TYPE);
+        $glueResponseTransfer->setFormat(GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE);
         $sparseFields = $this->getSparseFields($glueRequestTransfer);
 
         return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseData(
@@ -74,13 +77,10 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         $sparseFields = [];
 
         foreach ($glueRequestTransfer->getSparseResources() as $sparseResource) {
-            if ($sparseResource->getResourceType()) {
-                if (!array_key_exists($sparseResource->getResourceTypeOrFail(), $sparseFields)) {
-                    $sparseFields[$sparseResource->getResourceType()] = [];
-                }
-
-                $sparseFields[$sparseResource->getResourceType()] = $sparseResource->getFields();
+            if (array_key_exists($sparseResource->getResourceTypeOrFail(), $sparseFields)) {
+                $sparseFields[$sparseResource->getResourceType()] = [];
             }
+            $sparseFields[$sparseResource->getResourceType()] = $sparseResource->getFields();
         }
 
         return $sparseFields;

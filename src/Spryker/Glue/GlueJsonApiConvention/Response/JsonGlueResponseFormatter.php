@@ -124,8 +124,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
-     * *
-     *
      * @param \ArrayObject<int, \Generated\Shared\Transfer\RestErrorMessageTransfer> $restErrorMessageTransfers
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
@@ -182,13 +180,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
             $resource = $resource->toArray();
             $resourceData = [];
             if (!$resource[static::RESPONSE_LINKS]) {
-                $link = $resource[static::RESOURCE_TYPE];
-                if ($resource[static::RESOURCE_ID]) {
-                    $link .= '/' . $resource[static::RESOURCE_ID];
-                }
-                $queryString = $this->buildQueryString($glueRequestTransfer);
-
-                $resource[static::RESPONSE_LINKS] = $this->formatLinks([static::LINK_SELF => $link . $queryString]);
+                $resource[static::RESPONSE_LINKS] = $this->getResponseLink($resource, $glueRequestTransfer);
             }
 
             foreach ($resource as $field => $value) {
@@ -200,6 +192,23 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         }
 
         return $resourcesData;
+    }
+
+    /**
+     * @param array<string, mixed> $resource
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return array<string, string>
+     */
+    protected function getResponseLink(array $resource, GlueRequestTransfer $glueRequestTransfer): array
+    {
+        $link = $resource[static::RESOURCE_TYPE];
+        if ($resource[static::RESOURCE_ID]) {
+            $link .= '/' . $resource[static::RESOURCE_ID];
+        }
+        $queryString = $this->buildQueryString($glueRequestTransfer);
+
+        return $this->formatLinks([static::LINK_SELF => $link . $queryString]);
     }
 
     /**
@@ -220,10 +229,10 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
      */
     protected function isSingleObjectRequest(GlueRequestTransfer $glueRequestTransfer, array $glueResources): bool
     {
-        $id = $glueRequestTransfer->getResourceOrFail()->getId();
+        $resourceId = $glueRequestTransfer->getResourceOrFail()->getId();
         $method = $glueRequestTransfer->getMethod();
 
-        return count($glueResources) === 1 && (($id && $id !== static::COLLECTION_IDENTIFIER_CURRENT_USER) || $method === Request::METHOD_POST);
+        return count($glueResources) === 1 && (($resourceId && $resourceId !== static::COLLECTION_IDENTIFIER_CURRENT_USER) || $method === Request::METHOD_POST);
     }
 
     /**

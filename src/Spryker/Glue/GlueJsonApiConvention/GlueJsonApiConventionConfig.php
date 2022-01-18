@@ -18,6 +18,11 @@ class GlueJsonApiConventionConfig extends AbstractBundleConfig
     public const CONVENTION_JSON_API = 'json_api';
 
     /**
+     * @var string
+     */
+    public const HEADER_CONTENT_TYPE = 'application/vnd.api+json';
+
+    /**
      * Specification:
      *  - Domain name of glue application to build API links.
      *

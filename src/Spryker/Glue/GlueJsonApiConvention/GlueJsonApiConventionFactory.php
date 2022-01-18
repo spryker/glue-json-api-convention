@@ -7,7 +7,6 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention;
 
-use Spryker\Glue\GlueJsonApiConvention\Controller\ControllerResolver;
 use Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Decoder\JsonDecoder;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
@@ -17,14 +16,10 @@ use Spryker\Glue\GlueJsonApiConvention\Request\AttributesRequestBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatter;
-use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatterInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
 use Spryker\Shared\Kernel\ClassResolver\Controller\AbstractControllerResolver;
 
@@ -47,24 +42,6 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     public function createRequestRelationshipBuilder(): RequestBuilderInterface
     {
         return new RequestRelationshipBuilder();
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilderInterface
-     */
-    protected function createResourceBuilder(): ResourceBuilderInterface
-    {
-        return new ResourceBuilder(
-            $this->createControllerResolver(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Shared\Kernel\ClassResolver\Controller\AbstractControllerResolver
-     */
-    protected function createControllerResolver(): AbstractControllerResolver
-    {
-        return new ControllerResolver();
     }
 
     /**
@@ -101,15 +78,8 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     {
         return new JsonGlueResponseBuilder(
             $this->createJsonGlueResponseFormatter(),
+            $this->getConfig(),
         );
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatterInterface
-     */
-    public function createRelationshipResponseFormatter(): RelationshipResponseFormatterInterface
-    {
-        return new RelationshipResponseFormatter();
     }
 
     /**
