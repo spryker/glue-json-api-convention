@@ -21,7 +21,6 @@ use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilderInterface
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
-use Spryker\Shared\Kernel\ClassResolver\Controller\AbstractControllerResolver;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig getConfig()
