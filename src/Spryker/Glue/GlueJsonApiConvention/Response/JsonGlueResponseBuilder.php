@@ -8,9 +8,8 @@
 namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface;
+use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 
 class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
 {
@@ -20,11 +19,18 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
     protected $jsonGlueResponseFormatter;
 
     /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter
+     * @var \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig
      */
-    public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter)
+    protected $jsonApiConventionConfig;
+
+    /**
+     * @param \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter
+     * @param \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig $jsonApiConventionConfig
+     */
+    public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter, GlueJsonApiConventionConfig $jsonApiConventionConfig)
     {
         $this->jsonGlueResponseFormatter = $jsonGlueResponseFormatter;
+        $this->jsonApiConventionConfig = $jsonApiConventionConfig;
     }
 
     /**
@@ -37,16 +43,25 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         GlueResponseTransfer $glueResponseTransfer,
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
-        $mainResource = $glueResponseTransfer->getResource();
+        if ($glueResponseTransfer->getErrors()->count()) {
+            $content = $this->jsonGlueResponseFormatter->formatErrorResponse(
+                $glueResponseTransfer->getErrors(),
+                $glueRequestTransfer,
+            );
+            $glueResponseTransfer->setContent($content);
 
-        if (!$mainResource) {
+            return $glueResponseTransfer;
+        }
+
+        if (count($glueResponseTransfer->getResources()) === 0) {
             return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseWithEmptyResource($glueRequestTransfer));
         }
 
+        $glueResponseTransfer->setFormat(GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE);
         $sparseFields = $this->getSparseFields($glueRequestTransfer);
 
         return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseData(
-            $mainResource->toArray(),
+            $glueResponseTransfer->getResources()->getArrayCopy(),
             $sparseFields,
             $glueRequestTransfer,
         ));
@@ -62,13 +77,9 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         $sparseFields = [];
 
         foreach ($glueRequestTransfer->getSparseResources() as $sparseResource) {
-            if (!$sparseResource->getResourceType()) {
-                continue;
-            }
-            if (!array_key_exists($sparseResource->getResourceType(), $sparseFields)) {
+            if (array_key_exists($sparseResource->getResourceTypeOrFail(), $sparseFields)) {
                 $sparseFields[$sparseResource->getResourceType()] = [];
             }
-
             $sparseFields[$sparseResource->getResourceType()] = $sparseResource->getFields();
         }
 

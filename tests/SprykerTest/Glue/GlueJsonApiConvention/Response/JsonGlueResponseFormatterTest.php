@@ -7,12 +7,15 @@
 
 namespace SprykerTest\Glue\GlueJsonApiConvention\Response;
 
+use ArrayObject;
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueResourceTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceBridge;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\JsonEncoder;
+use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 
 /**
@@ -29,6 +32,11 @@ use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 class JsonGlueResponseFormatterTest extends Unit
 {
     /**
+     * @var string
+     */
+    protected const GLUE_DOMAIN = 'GLUE_STOREFRONT_API_APPLICATION:GLUE_STOREFRONT_API_HOST';
+
+    /**
      * @var \SprykerTest\Glue\GlueJsonApiConvention\GlueJsonApiConventionTester
      */
     protected $tester;
@@ -38,25 +46,22 @@ class JsonGlueResponseFormatterTest extends Unit
      */
     public function testFormatResponseData(): void
     {
-        $jsonGlueResponseFormatter = new JsonGlueResponseFormatter($this->createJsonEncoder());
+        $jsonGlueResponseFormatter = new JsonGlueResponseFormatter($this->createJsonEncoder(), $this->getJsonApiConventionConfigMock());
         $formatedResponseData = $jsonGlueResponseFormatter->formatResponseData(
-            $this->getMainResourceTestData(),
+            $this->getGlueResourcesTestData(),
             $this->getSparseFieldsTestData(),
-            (new GlueRequestTransfer())->setExcludeRelationships(false),
+            (new GlueRequestTransfer())->setExcludeRelationships(false)
+                ->setResource((new GlueResourceTransfer())),
         );
 
         $this->assertNotNull($formatedResponseData);
         $this->assertIsString($formatedResponseData);
-        $this->assertStringContainsString('Test title', $formatedResponseData);
         $this->assertStringContainsString('articles', $formatedResponseData);
-        $this->assertStringContainsString('test-type', $formatedResponseData);
-        $this->assertStringContainsString('relationships', $formatedResponseData);
         $decodedData = json_decode($formatedResponseData, true);
-        $this->assertArrayHasKey('relationships', $decodedData['data']);
-        $this->assertArrayHasKey('included', $decodedData);
-        $this->assertSame('9', $decodedData['included']['author']['id']);
-        $this->assertArrayHasKey('attributes', $decodedData['included']['author']);
-        $this->assertArrayNotHasKey('attributes', $decodedData['included']['test-type']);
+        $this->assertArrayHasKey('type', $decodedData['data'][0]);
+        $this->assertSame('articles', $decodedData['data'][0]['type']);
+        $this->assertArrayHasKey('links', $decodedData['data'][0]);
+        $this->assertArrayHasKey('id', $decodedData['data'][0]);
     }
 
     /**
@@ -64,19 +69,20 @@ class JsonGlueResponseFormatterTest extends Unit
      */
     public function testFormatResponseDataWithExcludeRelationships(): void
     {
-        $jsonGlueResponseFormatter = new JsonGlueResponseFormatter($this->createJsonEncoder());
+        $jsonGlueResponseFormatter = new JsonGlueResponseFormatter($this->createJsonEncoder(), $this->getJsonApiConventionConfigMock());
         $formatedResponseData = $jsonGlueResponseFormatter->formatResponseData(
-            $this->getMainResourceTestData(),
+            $this->getGlueResourcesTestData(),
             $this->getSparseFieldsTestData(),
-            (new GlueRequestTransfer())->setExcludeRelationships(true),
+            (new GlueRequestTransfer())->setExcludeRelationships(true)
+                ->setResource((new GlueResourceTransfer())),
         );
 
         $this->assertNotNull($formatedResponseData);
         $this->assertIsString($formatedResponseData);
         $decodedData = json_decode($formatedResponseData, true);
-        $this->assertArrayNotHasKey('relationships', $decodedData['data']);
-        $this->assertArrayNotHasKey('included', $decodedData);
-        $this->assertArrayHasKey('attributes', $decodedData['data']);
+        $this->assertArrayHasKey('type', $decodedData['data'][0]);
+        $this->assertArrayHasKey('id', $decodedData['data'][0]);
+        $this->assertSame('1', $decodedData['data'][0]['id']);
     }
 
     /**
@@ -100,42 +106,17 @@ class JsonGlueResponseFormatterTest extends Unit
     /**
      * @return array
      */
-    protected function getMainResourceTestData(): array
+    protected function getGlueResourcesTestData(): array
     {
-        return [
-                'type' => 'articles',
-                'id' => '1',
-                'attributes' => [
-                    'title' => 'Test title',
-                ],
-                'links' => [
-                    'self' => 'http://example.com/articles/1',
-                ],
-                'relationships' => [
-                    'author' => [
-                        'type' => 'author',
-                        'id' => '9',
-                        'links' => [
-                            'self' => '/articles/1/relationships/author',
-                            'related' => '/articles/1/author',
-                        ],
-                        'attributes' => [
-                            'title' => 'Test title',
-                        ],
-                    ],
-                    'test-type' => [
-                        'type' => 'test-type',
-                        'id' => '2',
-                        'links' => [
-                            'self' => '/test/4/relationships/author',
-                            'related' => '/test/4/author',
-                        ],
-                        'attributes' => [
-                            'title' => 'Test title',
-                        ],
-                    ],
-                ],
-        ];
+        $links = new ArrayObject();
+        $links['self'] = 'http://example.com/articles/1';
+
+        $resourceTransfer = (new GlueResourceTransfer())
+            ->setType('articles')
+            ->setId('1')
+            ->setLinks($links);
+
+        return [$resourceTransfer];
     }
 
     /**
@@ -146,5 +127,18 @@ class JsonGlueResponseFormatterTest extends Unit
         return [
             'test-type' => ['id', 'type'],
         ];
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig|mixed
+     */
+    protected function getJsonApiConventionConfigMock()
+    {
+        $configMock = $this->createMock(GlueJsonApiConventionConfig::class);
+        $configMock->expects($this->never())
+            ->method('getGlueDomain')
+            ->willReturn(static::GLUE_DOMAIN);
+
+        return $configMock;
     }
 }

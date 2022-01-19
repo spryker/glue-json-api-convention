@@ -11,14 +11,15 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface;
-use Spryker\Glue\GlueApplication\ApiApplication\Type\RequestFlowAwareApiApplication;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
+use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\JsonApiResourceInterface;
+use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implements ApiConventionPluginInterface
+class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConventionPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
@@ -27,7 +28,11 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
      */
     public function isApplicable(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        return $glueRequestTransfer->getMeta()['content-type'] === 'application/vnd.api-json';
+        $meta = $glueRequestTransfer->getMeta();
+
+        return array_key_exists('content-type', $meta)
+            && isset($meta['content-type'][0])
+            && $meta['content-type'][0] === GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE;
     }
 
     /**
@@ -36,6 +41,14 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
     public function getName(): string
     {
         return GlueJsonApiConventionConfig::CONVENTION_JSON_API;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceType(): string
+    {
+        return JsonApiResourceInterface::class;
     }
 
     /**
@@ -49,6 +62,8 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
      */
     public function buildRequest(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
+        $glueRequestTransfer->setConvention($this->getName());
+
         foreach ($this->getFactory()->getRequestBuilderPlugins() as $builderRequestPlugin) {
             $glueRequestTransfer = $builderRequestPlugin->build($glueRequestTransfer);
         }
@@ -101,22 +116,6 @@ class JsonApiApiConventionPlugin extends RequestFlowAwareApiApplication implemen
         }
 
         return $glueRequestValidationTransfer ?? (new GlueRequestValidationTransfer())->setIsValid(true);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceInterface $resource
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
-    public function executeResource(ResourceInterface $resource, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
-    {
-        // TODO: plugins were here, but they are not required, there is one way to execute for convention.
-        return $this->getFactory()->createJsonApiResourceExecutor()->executeResource($resource, $glueRequestTransfer);
     }
 
     /**

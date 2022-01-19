@@ -10,7 +10,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Request;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueSparseResourceTransfer;
 
-class RequestSparseFieldBuilder implements RequestSparseFieldBuilderInterface
+class RequestSparseFieldBuilder implements RequestBuilderInterface
 {
     /**
      * @var string
@@ -24,9 +24,7 @@ class RequestSparseFieldBuilder implements RequestSparseFieldBuilderInterface
      */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
-        $queryParameters = [];
-        parse_str(parse_url($glueRequestTransfer->getPath(), PHP_URL_QUERY), $queryParameters);
-        $glueRequestTransfer->setQueryFields($queryParameters);
+        $queryParameters = $glueRequestTransfer->getQueryFields();
 
         if (
             !isset($queryParameters[static::QUERY_FIELDS]) ||

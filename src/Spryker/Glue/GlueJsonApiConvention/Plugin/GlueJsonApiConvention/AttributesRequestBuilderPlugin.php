@@ -8,16 +8,18 @@
 namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
-use Spryker\Glue\GlueStorefrontApiApplicationExtension\Dependency\Plugin\RequestBuilderPluginInterface;
+use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestBuilderPluginInterface;
 use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class RequestRelationshipBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
+class AttributesRequestBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
 {
     /**
      * {@inheritDoc}
+     * - Sets `GlueRequestTransfer.attributes` in case the request has content.
+     * - Ignores content if the content structure does not follow JSON API (`data.attributes`).
      *
      * @api
      *
@@ -27,6 +29,6 @@ class RequestRelationshipBuilderPlugin extends AbstractPlugin implements Request
      */
     public function build(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
-        return $this->getFactory()->createRequestRelationshipBuilder()->extract($glueRequestTransfer);
+        return $this->getFactory()->createAttributesRequestBuilder()->extract($glueRequestTransfer);
     }
 }

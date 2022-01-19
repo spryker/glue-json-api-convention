@@ -12,7 +12,15 @@ use Spryker\Shared\GlueJsonApiConvention\GlueJsonApiConventionConstants;
 
 class GlueJsonApiConventionConfig extends AbstractBundleConfig
 {
+    /**
+     * @var string
+     */
     public const CONVENTION_JSON_API = 'json_api';
+
+    /**
+     * @var string
+     */
+    public const HEADER_CONTENT_TYPE = 'application/vnd.api+json';
 
     /**
      * Specification:
@@ -22,7 +30,7 @@ class GlueJsonApiConventionConfig extends AbstractBundleConfig
      *
      * @return string
      */
-    public function getGlueDomainName(): string
+    public function getGlueDomain(): string
     {
         return $this->get(GlueJsonApiConventionConstants::GLUE_DOMAIN);
     }

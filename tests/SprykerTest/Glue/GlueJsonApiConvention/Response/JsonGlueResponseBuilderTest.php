@@ -17,11 +17,10 @@ use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionT
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\JsonEncoder;
+use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface;
-use SprykerTest\Shared\Kernel\Transfer\Fixtures\AbstractTransfer;
 
 /**
  * Auto-generated group annotations
@@ -37,6 +36,11 @@ use SprykerTest\Shared\Kernel\Transfer\Fixtures\AbstractTransfer;
 class JsonGlueResponseBuilderTest extends Unit
 {
     /**
+     * @var string
+     */
+    protected const GLUE_DOMAIN = 'GLUE_STOREFRONT_API_APPLICATION:GLUE_STOREFRONT_API_HOST';
+
+    /**
      * @var \SprykerTest\Glue\GlueJsonApiConvention\GlueJsonApiConventionTester
      */
     protected $tester;
@@ -50,65 +54,14 @@ class JsonGlueResponseBuilderTest extends Unit
         $buildResponse = $jsonGlueResponseBuilder->buildResponse(
             $this->getGlueResponseTransfer(),
             $this->getGlueRequestTransfer(),
-            [
-                $this->getResourceRoutePluginMock(),
-                $this->getResourceWithoutRelationshipType(),
-            ],
         );
 
         $content = $buildResponse->getContent();
 
         $this->assertNotNull($content);
         $this->assertIsString($content);
-        $this->assertStringContainsString('Author title', $content);
         $this->assertStringContainsString('articles', $content);
         $decodedContent = json_decode($content, true);
-        $this->assertArrayHasKey('relationships', $decodedContent['data']);
-        $this->assertArrayHasKey('included', $decodedContent);
-        $this->assertArrayHasKey('author', $decodedContent['included']);
-        $this->assertArrayHasKey('attributes', $decodedContent['included']['author']);
-        $this->assertArrayHasKey('type', $decodedContent['included']['author']);
-        $this->assertArrayNotHasKey('id', $decodedContent['included']['author']);
-        $this->assertArrayNotHasKey('test-type', $decodedContent['included']);
-    }
-
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface
-     */
-    protected function getResourceRoutePluginMock(): ResourceRelationshipPluginInterface
-    {
-        $relationshipResourceMock = $this->createMock(AbstractTransfer::class);
-        $relationshipResourceMock->expects($this->any())
-            ->method('toArray')
-            ->willReturn(['title' => 'Author title']);
-        $resourceRelationshipPlugin = $this->createMock(ResourceRelationshipPluginInterface::class);
-        $resourceRelationshipPlugin
-            ->expects($this->exactly(1))
-            ->method('getRelationshipType')
-            ->willReturn('author');
-        $resourceRelationshipPlugin
-            ->expects($this->once())
-            ->method('addRelationships')
-            ->willReturnCallback(function (GlueResourceTransfer $resourceTransfer, GlueRequestTransfer $request) use ($relationshipResourceMock) {
-                $relationshipResource = new GlueResourceTransfer();
-                $relationshipResource->setType('author');
-                $relationshipResource->setAttributes($relationshipResourceMock);
-                $relationshipResource->setId('9');
-
-                return $resourceTransfer->addRelationship('author', $relationshipResource);
-            });
-
-        return $resourceRelationshipPlugin;
-    }
-
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface
-     */
-    protected function getResourceWithoutRelationshipType(): ResourceRelationshipPluginInterface
-    {
-        $resourceRelationshipPlugin = $this->createMock(ResourceRelationshipPluginInterface::class);
-
-        return $resourceRelationshipPlugin;
     }
 
     /**
@@ -134,7 +87,7 @@ class JsonGlueResponseBuilderTest extends Unit
      */
     protected function createJsonGlueResponseFormatter(): JsonGlueResponseFormatterInterface
     {
-        return new JsonGlueResponseFormatter($this->createJsonEncoder());
+        return new JsonGlueResponseFormatter($this->createJsonEncoder(), $this->getJsonApiConventionConfigMock());
     }
 
     /**
@@ -154,7 +107,10 @@ class JsonGlueResponseBuilderTest extends Unit
 
         return (new GlueRequestTransfer())
             ->setIncludedRelationships($includedRelationships)
-            ->setSparseResources($sparseResources);
+            ->setSparseResources($sparseResources)
+            ->setResource((new GlueResourceTransfer())
+                ->setType('articles')
+                ->setId('1'));
     }
 
     /**
@@ -166,9 +122,22 @@ class JsonGlueResponseBuilderTest extends Unit
         $links['self'] = 'http://example.com/articles/1';
 
         return (new GlueResponseTransfer())
-            ->setResource((new GlueResourceTransfer())
+            ->addResource((new GlueResourceTransfer())
                 ->setType('articles')
                 ->setId('1')
                 ->setLinks($links));
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig|mixed
+     */
+    protected function getJsonApiConventionConfigMock()
+    {
+        $configMock = $this->createMock(GlueJsonApiConventionConfig::class);
+        $configMock->expects($this->never())
+            ->method('getGlueDomain')
+            ->willReturn(static::GLUE_DOMAIN);
+
+        return $configMock;
     }
 }
