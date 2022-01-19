@@ -24,6 +24,6 @@
         <property name="content" type="string"/>
         <property name="format" type="string"/>
         <property name="attributes" type="Abstract"/>
-        <property name="resource" type="GlueResource"/>
+        <property name="resources" type="GlueResource[]" singular="resource"/>
     </transfer>
 </transfers>

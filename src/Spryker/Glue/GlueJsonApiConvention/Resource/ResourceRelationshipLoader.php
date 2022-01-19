@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
+namespace Spryker\Glue\GlueJsonApiConvention\Resource;
+
+use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface;
+
+class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
+{
+    /**
+     * @var \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface
+     */
+    protected $resourceRelationship;
+
+    /**
+     * @param \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface $resourceRelationshipCollection
+     */
+    public function __construct(ResourceRelationshipCollectionInterface $resourceRelationshipCollection)
+    {
+        $this->resourceRelationship = $resourceRelationshipCollection;
+    }
+
+    /**
+     * @param string $resourceName
+     *
+     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface>
+     */
+    public function load(string $resourceName): array
+    {
+        if ($this->resourceRelationship->hasRelationships($resourceName)) {
+            return $this->resourceRelationship->getRelationships($resourceName);
+        }
+
+        return [];
+    }
+}
+
