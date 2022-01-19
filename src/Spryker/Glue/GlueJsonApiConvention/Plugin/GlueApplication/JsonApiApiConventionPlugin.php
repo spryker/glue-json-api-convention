@@ -28,7 +28,7 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
      */
     public function isApplicable(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        return array_key_exists('content-type', $glueRequestTransfer->getMeta()) && $glueRequestTransfer->getMeta()['content-type'][0] === 'application/vnd.api-json';
+        return array_key_exists('content-type', $glueRequestTransfer->getMeta()) && $glueRequestTransfer->getMeta()['content-type'][0] === GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE;
     }
 
     /**
