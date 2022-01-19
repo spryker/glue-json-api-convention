@@ -177,18 +177,11 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     {
         $resourcesData = [];
         foreach ($glueResources as $resource) {
-            $resource = $resource->toArray();
-            $resourceData = [];
-            if (!$resource[static::RESPONSE_LINKS]) {
+            $resource = array_filter($resource->toArray());
+            if (!array_key_exists(static::RESPONSE_LINKS, $resource)) {
                 $resource[static::RESPONSE_LINKS] = $this->getResponseLink($resource, $glueRequestTransfer);
             }
-
-            foreach ($resource as $field => $value) {
-                if ($value) {
-                    $resourceData[$field] = $value;
-                }
-            }
-            $resourcesData[] = $resourceData;
+            $resourcesData[] = $resource;
         }
 
         return $resourcesData;
