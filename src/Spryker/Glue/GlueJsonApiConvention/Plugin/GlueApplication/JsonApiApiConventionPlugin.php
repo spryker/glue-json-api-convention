@@ -31,7 +31,6 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
         $meta = $glueRequestTransfer->getMeta();
 
         return array_key_exists('content-type', $meta)
-            && $meta['content-type'] !== []
             && isset($meta['content-type'][0])
             && $meta['content-type'][0] === GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE;
     }
