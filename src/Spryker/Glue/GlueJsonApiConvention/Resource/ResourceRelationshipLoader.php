@@ -7,21 +7,19 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention\Resource;
 
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface;
-
 class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
 {
     /**
-     * @var \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface
+     * @var array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface>
      */
-    protected $resourceRelationship;
+    protected $resourceRelationships;
 
     /**
-     * @param \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface $resourceRelationshipCollection
+     * @param array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface> $resourceRelationships
      */
-    public function __construct(ResourceRelationshipCollectionInterface $resourceRelationshipCollection)
+    public function __construct(array $resourceRelationships)
     {
-        $this->resourceRelationship = $resourceRelationshipCollection;
+        $this->resourceRelationships = $resourceRelationships;
     }
 
     /**
@@ -31,11 +29,13 @@ class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
      */
     public function load(string $resourceName): array
     {
-        if ($this->resourceRelationship->hasRelationships($resourceName)) {
-            return $this->resourceRelationship->getRelationships($resourceName);
+        foreach ($this->resourceRelationships as $resourceRelationship) {
+            $resourceRelationshipCollection = $resourceRelationship->getResourceRelationshipCollection();
+            if ($resourceRelationshipCollection->hasRelationships($resourceName)) {
+                return $resourceRelationshipCollection->getRelationships($resourceName);
+            }
         }
 
         return [];
     }
 }
-

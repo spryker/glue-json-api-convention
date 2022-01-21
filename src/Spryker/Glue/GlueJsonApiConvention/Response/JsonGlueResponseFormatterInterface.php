@@ -9,18 +9,19 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use ArrayObject;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueResponseTransfer;
 
 interface JsonGlueResponseFormatterInterface
 {
     /**
-     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
+     * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
      * @param array<string, mixed> $sparseFields
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string
      */
     public function formatResponseData(
-        array $glueResources,
+        GlueResponseTransfer $glueResponseTransfer,
         array $sparseFields,
         GlueRequestTransfer $glueRequestTransfer
     ): string;

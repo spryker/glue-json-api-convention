@@ -61,7 +61,7 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         $sparseFields = $this->getSparseFields($glueRequestTransfer);
 
         return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseData(
-            $glueResponseTransfer->getResources()->getArrayCopy(),
+            $glueResponseTransfer,
             $sparseFields,
             $glueRequestTransfer,
         ));

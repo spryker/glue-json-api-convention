@@ -16,28 +16,16 @@ use Spryker\Glue\GlueJsonApiConvention\Request\AttributesRequestBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Resource\JsonApiResourceExecutor;
-use Spryker\Glue\GlueJsonApiConvention\Resource\JsonApiResourceExecutorInterface;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceBuilderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceExtractor;
-use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceExtractorInterface;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoader;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
+use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponse;
 use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseInterface;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestResourcePluginFilter;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestResourcePluginFilterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestRoutingMatcher;
-use Spryker\Glue\GlueJsonApiConvention\Router\RequestRoutingMatcherInterface;
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
 
 /**
@@ -100,19 +88,11 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     }
 
     /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatterInterface
+     * @return \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface
      */
-    public function createRelationshipResponseFormatter(): RelationshipResponseFormatterInterface
+    public function createRelationshipResponse(): JsonGlueRelationshipResponseBuilderInterface
     {
-        return new RelationshipResponseFormatter();
-    }
-
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseInterface
-     */
-    public function createRelationshipResponse(): RelationshipResponseInterface
-    {
-        return new RelationshipResponse($this->createResourceRelationshipLoader());
+        return new JsonGlueRelationshipResponseBuilder($this->createResourceRelationshipLoader());
     }
 
     /**
@@ -124,7 +104,7 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     }
 
     /**
-     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface>
+     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface>
      */
     public function getRelationshipProviderPlugins(): array
     {

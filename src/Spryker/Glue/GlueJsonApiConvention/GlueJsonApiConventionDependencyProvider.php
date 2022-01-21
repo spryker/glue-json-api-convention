@@ -8,10 +8,6 @@
 namespace Spryker\Glue\GlueJsonApiConvention;
 
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceBridge;
-use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\JsonApiResponseBuilderPlugin;
-use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\RequestSparseFieldBuilderPlugin;
-use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention\RouterMatcherPlugin;
-use Spryker\Glue\GlueStorefrontApiApplicationGlueJsonApiConventionConnector\Plugin\GlueStorefrontApiApplication\StorefrontApiRelationshipProviderPlugin;
 use Spryker\Glue\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Container;
 
@@ -203,7 +199,7 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     }
 
     /**
-     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipCollectionInterface>
+     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface>
      */
     public function getRelationshipProviderPlugins(): array
     {

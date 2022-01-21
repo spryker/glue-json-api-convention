@@ -9,24 +9,17 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
-use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
 
-class RelationshipResponse implements RelationshipResponseInterface
+class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipResponseBuilderInterface
 {
-    /**
-     * @var string
-     */
-    protected const RESPONSE_INCLUDED = 'included';
-
     /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface
      */
     protected $resourceRelationshipProviderLoader;
 
     /**
-     * @var array
+     * @var array<string, bool>
      */
     protected $alreadyLoadedResources = [];
 
@@ -41,28 +34,22 @@ class RelationshipResponse implements RelationshipResponseInterface
     /**
      * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\GlueResponseTransfer
      */
-    public function buildResponse(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer)
+    public function buildResponse(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
-//        dd([$glueResponseTransfer, $glueRequestTransfer]);
-
         $mainResourceType = $glueResponseTransfer->getResources()[0]->getType();
 
         $this->loadRelationships(
             $mainResourceType,
-            $glueResponseTransfer->getResources(),
+            $glueResponseTransfer->getResources()->getArrayCopy(),
             $glueRequestTransfer,
         );
 
-        $included = $this->processIncluded($glueResponseTransfer->getResources(), $glueRequestTransfer);
-
-        //TODO change to json decoder
-        $response = json_decode($glueResponseTransfer->getContent(), true);
-
-        if ($included) {
-            //TODO add resourcesToArray
-            $response[static::RESPONSE_INCLUDED] = $this->resourcesToArray($included, $glueRequestTransfer, $mainResourceType);
-        }
+        $glueResponseTransfer->setIncludedRelationships(
+            $this->processIncluded($glueResponseTransfer->getResources()->getArrayCopy(), $glueRequestTransfer),
+        );
 
         return $glueResponseTransfer;
     }
@@ -90,11 +77,12 @@ class RelationshipResponse implements RelationshipResponseInterface
         $this->alreadyLoadedResources[$resourceName . $parentResourceId] = true;
 
         foreach ($resources as $resource) {
-            foreach ($resource->getRelationships() as $resourceType => $resourceRelationships) {
-                if (!$this->hasRelationship($resourceType, $glueRequestTransfer)) {
+            foreach ($resource->getRelationships() as $resourceRelationship) {
+                if (!$this->hasRelationship($resourceRelationship->getTypeOrFail(), $glueRequestTransfer)) {
                     continue;
                 }
-                $this->loadRelationships($resourceType, $resourceRelationships, $glueRequestTransfer, $resource->getId());
+
+                $this->loadRelationships($resourceRelationship->getTypeOrFail(), [$resourceRelationship], $glueRequestTransfer, $resource->getId());
             }
         }
     }
@@ -103,61 +91,62 @@ class RelationshipResponse implements RelationshipResponseInterface
      * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resources
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
-     * @return array
+     * @return array<mixed>
      */
     public function processIncluded(array $resources, GlueRequestTransfer $glueRequestTransfer): array
     {
-        $included = [];
+        $includedResourceRelationships = [];
+
         foreach ($resources as $resource) {
-            $this->processRelationships($resource->getRelationships(), $glueRequestTransfer, $included);
+            $this->processRelationships($resource->getRelationships()->getArrayCopy(), $glueRequestTransfer, $includedResourceRelationships);
         }
 
-        return array_values($included);
+        return array_values($includedResourceRelationships);
     }
 
     /**
-     * @param array $resourceRelationships
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resourceRelationships
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param array $included
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $includedResourceRelationships
      *
      * @return void
      */
     protected function processRelationships(
         array $resourceRelationships,
         GlueRequestTransfer $glueRequestTransfer,
-        array &$included
+        array &$includedResourceRelationships
     ): void {
-        /** @var array<\Generated\Shared\Transfer\GlueResourceTransfer> $resources */
-        foreach ($resourceRelationships as $resourceType => $resources) {
+        foreach ($resourceRelationships as $resource) {
+            $resourceType = $resource->getTypeOrFail();
+
             if (!$this->hasRelationship($resourceType, $glueRequestTransfer)) {
                 continue;
             }
-            foreach ($resources as $resource) {
-                if ($resource->getRelationships()) {
-                    $this->processRelationships($resource->getRelationships(), $glueRequestTransfer, $included);
-                }
 
-                $resourceId = $resourceType . ':' . $resource->getId();
-                if ($this->isResourceCanBeIncluded($included, $resourceId)) {
-                    $included[$resourceId] = $resource;
-                }
+            if ($resource->getRelationships()) {
+                $this->processRelationships((array)$resource->getRelationships(), $glueRequestTransfer, $includedResourceRelationships);
+            }
+
+            $resourceId = $resourceType . ':' . $resource->getId();
+            if ($this->isResourceCanBeIncluded($includedResourceRelationships, $resourceId)) {
+                $includedResourceRelationships[$resourceId] = $resource;
             }
         }
     }
 
     /**
-     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $included
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $includedResourceRelationships
      * @param string $resourceId
      *
      * @return bool
      */
-    protected function isResourceCanBeIncluded(array $included, string $resourceId): bool
+    protected function isResourceCanBeIncluded(array $includedResourceRelationships, string $resourceId): bool
     {
-        if (!isset($included[$resourceId])) {
+        if (!isset($includedResourceRelationships[$resourceId])) {
             return true;
         }
 
-        $resource = $included[$resourceId];
+        $resource = $includedResourceRelationships[$resourceId];
 
         return !$resource->getRelationships();
     }
@@ -168,23 +157,21 @@ class RelationshipResponse implements RelationshipResponseInterface
      *
      * @return bool
      */
-    public function hasRelationship(string $resourceType, GlueRequestTransfer $glueRequestTransfer): bool
+    protected function hasRelationship(string $resourceType, GlueRequestTransfer $glueRequestTransfer): bool
     {
-        if ($glueRequestTransfer->getResource()->getType() === $resourceType) {
+        if ($resourceType === $glueRequestTransfer->getResourceOrFail()->getType()) {
             return true;
         }
 
-        $includes = $glueRequestTransfer->getInclude();
-
-        return ($includes && isset($includes[$resourceType])) || (!$includes && !$glueRequestTransfer->getExcludeRelationship());
+        return in_array($resourceType, $glueRequestTransfer->getIncludedRelationships());
     }
 
     /**
      * @param string $resourceName
-     * @param array $resources
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resources
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
-     * @return array
+     * @return array<\Generated\Shared\Transfer\GlueResourceTransfer>
      */
     protected function applyRelationshipPlugins(string $resourceName, array $resources, GlueRequestTransfer $glueRequestTransfer): array
     {
@@ -206,12 +193,8 @@ class RelationshipResponse implements RelationshipResponseInterface
      *
      * @return bool
      */
-    protected function canLoadResource(
-        string $resourceType,
-        ?string $parentResourceId = null
-    ): bool {
-        $resourceIndex = $resourceType . $parentResourceId;
-
-        return !isset($this->alreadyLoadedResources[$resourceIndex]);
+    protected function canLoadResource(string $resourceType, ?string $parentResourceId = null): bool
+    {
+        return !isset($this->alreadyLoadedResources[$resourceType . $parentResourceId]);
     }
 }

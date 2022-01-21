@@ -17,8 +17,17 @@ use Spryker\Glue\Kernel\AbstractPlugin;
  */
 class RelationshipResponseFormatterPlugin extends AbstractPlugin implements ResponseFormatterPluginInterface
 {
-    //TODO spec
-    //called in Bundles/GlueJsonApiConvention/src/Spryker/Glue/GlueJsonApiConvention/Plugin/GlueApplication/JsonApiApiConventionPlugin.php
+    /**
+     * {@inheritDoc}
+     * - Loads resource relationships dependencies and adds included relationships.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\GlueResponseTransfer
+     */
     public function build(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
         return $this->getFactory()->createRelationshipResponse()->buildResponse($glueResponseTransfer, $glueRequestTransfer);
