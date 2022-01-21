@@ -37,9 +37,6 @@
     <transfer name="GlueRequestValidation">
     </transfer>
 
-    <transfer name="Abstract">
-    </transfer>
-
     <transfer name="GlueLink">
     </transfer>
 </transfers>
