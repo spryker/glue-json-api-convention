@@ -46,6 +46,7 @@ class JsonGlueResponseFormatterTest extends Unit
      */
     public function testFormatResponseData(): void
     {
+        //Act
         $jsonGlueResponseFormatter = new JsonGlueResponseFormatter($this->createJsonEncoder(), $this->getJsonApiConventionConfigMock());
         $formatedResponseData = $jsonGlueResponseFormatter->formatResponseData(
             $this->getGlueResourcesTestData(),
@@ -54,6 +55,7 @@ class JsonGlueResponseFormatterTest extends Unit
                 ->setResource((new GlueResourceTransfer())),
         );
 
+        //Assert
         $this->assertNotNull($formatedResponseData);
         $this->assertIsString($formatedResponseData);
         $this->assertStringContainsString('articles', $formatedResponseData);
@@ -69,6 +71,7 @@ class JsonGlueResponseFormatterTest extends Unit
      */
     public function testFormatResponseDataWithExcludeRelationships(): void
     {
+        //Act
         $jsonGlueResponseFormatter = new JsonGlueResponseFormatter($this->createJsonEncoder(), $this->getJsonApiConventionConfigMock());
         $formatedResponseData = $jsonGlueResponseFormatter->formatResponseData(
             $this->getGlueResourcesTestData(),
@@ -77,6 +80,7 @@ class JsonGlueResponseFormatterTest extends Unit
                 ->setResource((new GlueResourceTransfer())),
         );
 
+        //Assert
         $this->assertNotNull($formatedResponseData);
         $this->assertIsString($formatedResponseData);
         $decodedData = json_decode($formatedResponseData, true);

@@ -52,13 +52,13 @@ class AttributesRequestBuilderTest extends Unit
      */
     public function testAttributesRequestBuilderWithoutContent(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = new GlueRequestTransfer();
 
-        //act
+        //Act
         $glueRequestTransfer = $this->extractAttributesRequest($glueRequestTransfer);
 
-        //assert
+        //Assert
         $this->assertEmpty($glueRequestTransfer->getAttributes());
     }
 
@@ -67,13 +67,13 @@ class AttributesRequestBuilderTest extends Unit
      */
     public function testAttributesRequestBuilderWithWrongContentData(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = (new GlueRequestTransfer())->setContent($this->getWrongContentData());
 
-        //act
+        //Act
         $glueRequestTransfer = $this->extractAttributesRequest($glueRequestTransfer);
 
-        //assert
+        //Assert
         $this->assertEmpty($glueRequestTransfer->getAttributes());
     }
 
@@ -82,13 +82,13 @@ class AttributesRequestBuilderTest extends Unit
      */
     public function testAttributesRequestBuilderWithContentData(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = (new GlueRequestTransfer())->setContent($this->getContentData());
 
-        //act
+        //Act
         $glueRequestTransfer = $this->extractAttributesRequest($glueRequestTransfer);
 
-        //assert
+        //Assert
         $attributes = $glueRequestTransfer->getAttributes();
         $this->assertNotEmpty($attributes);
         $this->assertSame(static::ATTRIBUTES_FIRST_FIELD, $attributes[0]);

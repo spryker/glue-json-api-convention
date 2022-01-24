@@ -29,8 +29,8 @@ class RequestRelationshipBuilderTest extends Unit
      */
     public function testRequestRelationshipBuilder(): void
     {
+        //Arrange
         $expectedIncludes = ['resource1', 'resource2'];
-
         $glueRequestTransfer = (new GlueRequestTransfer())->setQueryFields([
             'include' => 'resource1,resource2',
             'page' => [
@@ -39,9 +39,11 @@ class RequestRelationshipBuilderTest extends Unit
             ],
         ]);
 
+        //Act
         $requestRelationshipBuilder = new RequestRelationshipBuilder();
         $glueRequestTransfer = $requestRelationshipBuilder->extract($glueRequestTransfer);
 
+        //Assert
         $this->assertSame($expectedIncludes[0], $glueRequestTransfer->getIncludedRelationships()[0]);
         $this->assertSame($expectedIncludes[1], $glueRequestTransfer->getIncludedRelationships()[1]);
     }
@@ -51,6 +53,7 @@ class RequestRelationshipBuilderTest extends Unit
      */
     public function testRequestRelationshipWithoutInclude(): void
     {
+        //Arrange
         $glueRequestTransfer = (new GlueRequestTransfer())->setQueryFields([
             'page' => [
                 'limit' => 1,
@@ -58,9 +61,11 @@ class RequestRelationshipBuilderTest extends Unit
             ],
         ]);
 
+        //Act
         $requestRelationshipBuilder = new RequestRelationshipBuilder();
         $glueRequestTransfer = $requestRelationshipBuilder->extract($glueRequestTransfer);
 
+        //Assert
         $this->assertEmpty($glueRequestTransfer->getIncludedRelationships());
     }
 
@@ -69,6 +74,7 @@ class RequestRelationshipBuilderTest extends Unit
      */
     public function testRequestRelationshipWithEmptyInclude(): void
     {
+        //Arrange
         $glueRequestTransfer = (new GlueRequestTransfer())->setQueryFields([
             'include' => '',
             'page' => [
@@ -77,9 +83,11 @@ class RequestRelationshipBuilderTest extends Unit
             ],
         ]);
 
+        //Act
         $requestRelationshipBuilder = new RequestRelationshipBuilder();
         $glueRequestTransfer = $requestRelationshipBuilder->extract($glueRequestTransfer);
 
+        //Assert
         $this->assertTrue($glueRequestTransfer->getExcludeRelationships());
     }
 }

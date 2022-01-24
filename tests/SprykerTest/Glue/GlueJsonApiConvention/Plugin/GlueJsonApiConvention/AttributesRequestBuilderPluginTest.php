@@ -33,11 +33,11 @@ class AttributesRequestBuilderPluginTest extends Unit
      */
     public function testJsonApiResponseFormatterPluginTest(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
 
-        //act
+        //Act
         $attributesRequestBuilderPlugin = new AttributesRequestBuilderPlugin();
-        $glueResponseTransfer = $attributesRequestBuilderPlugin->build($glueRequestTransfer);
+        $attributesRequestBuilderPlugin->build($glueRequestTransfer);
     }
 }

@@ -33,12 +33,12 @@ class JsonApiResponseFormatterPluginTest extends Unit
      */
     public function testJsonApiResponseFormatterPluginTest(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
         $glueResponseTransfer = $this->tester->createGlueResponseTransfer();
 
-        //act
+        //Act
         $jsonApiResponseFormatterPlugin = new JsonApiResponseFormatterPlugin();
-        $glueResponseTransfer = $jsonApiResponseFormatterPlugin->build($glueResponseTransfer, $glueRequestTransfer);
+        $jsonApiResponseFormatterPlugin->build($glueResponseTransfer, $glueRequestTransfer);
     }
 }

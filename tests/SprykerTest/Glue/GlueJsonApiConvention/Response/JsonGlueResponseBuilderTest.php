@@ -50,6 +50,7 @@ class JsonGlueResponseBuilderTest extends Unit
      */
     public function testBuildResponseData(): void
     {
+        //Act
         $jsonGlueResponseBuilder = new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter(), $this->getJsonApiConventionConfigMock());
         $buildResponse = $jsonGlueResponseBuilder->buildResponse(
             $this->getGlueResponseTransfer(),
@@ -58,6 +59,7 @@ class JsonGlueResponseBuilderTest extends Unit
 
         $content = $buildResponse->getContent();
 
+        //Assert
         $this->assertNotNull($content);
         $this->assertIsString($content);
         $this->assertStringContainsString('articles', $content);

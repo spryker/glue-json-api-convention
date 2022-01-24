@@ -44,14 +44,14 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginIsApplicable(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
 
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
         $isApplicable = $jsonApiApiConventionPlugin->isApplicable($glueRequestTransfer);
 
-        //assert
+        //Assert
         $this->assertTrue($isApplicable);
     }
 
@@ -60,11 +60,11 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginGetName(): void
     {
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
         $jsonApiApiConventionName = $jsonApiApiConventionPlugin->getName();
 
-        //assert
+        //Assert
         $this->assertSame(GlueJsonApiConventionConfig::CONVENTION_JSON_API, $jsonApiApiConventionName);
     }
 
@@ -73,11 +73,11 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginGetResourceType(): void
     {
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
         $jsonApiApiConventionResourceType = $jsonApiApiConventionPlugin->getResourceType();
 
-        //assert
+        //Assert
         $this->assertSame(JsonApiResourceInterface::class, $jsonApiApiConventionResourceType);
     }
 
@@ -86,12 +86,12 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginBuildRequest(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
 
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
-        $jsonApiApiConventionName = $jsonApiApiConventionPlugin->buildRequest($glueRequestTransfer);
+        $jsonApiApiConventionPlugin->buildRequest($glueRequestTransfer);
     }
 
     /**
@@ -99,12 +99,12 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginValidateRequest(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
 
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
-        $jsonApiApiConventionName = $jsonApiApiConventionPlugin->validateRequest($glueRequestTransfer);
+        $jsonApiApiConventionPlugin->validateRequest($glueRequestTransfer);
     }
 
     /**
@@ -112,13 +112,13 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginValidateRequestAfterRouting(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
         $jsonApiResourceInterfaceMock = $this->getMockBuilder(JsonApiResourceInterface::class)->getMock();
 
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
-        $jsonApiApiConventionName = $jsonApiApiConventionPlugin->validateRequestAfterRouting($glueRequestTransfer, $jsonApiResourceInterfaceMock);
+        $jsonApiApiConventionPlugin->validateRequestAfterRouting($glueRequestTransfer, $jsonApiResourceInterfaceMock);
     }
 
     /**
@@ -126,12 +126,12 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     public function testJsonApiApiConventionPluginFormatResponse(): void
     {
-        //arrange
+        //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
         $glueResponseTransfer = $this->tester->createGlueResponseTransfer();
 
-        //act
+        //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
-        $jsonApiApiConventionName = $jsonApiApiConventionPlugin->formatResponse($glueResponseTransfer, $glueRequestTransfer);
+        $jsonApiApiConventionPlugin->formatResponse($glueResponseTransfer, $glueRequestTransfer);
     }
 }

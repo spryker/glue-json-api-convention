@@ -34,9 +34,11 @@ class EncoderTest extends Unit
      */
     public function testJsonEncodeTestData(): void
     {
+        //Act
         $encoder = new JsonEncoder($this->getUtilEncodingService());
         $result = $encoder->encode($this->acceptedTypesForEncode());
 
+        //Assert
         $this->assertIsString($result);
         $this->assertEquals(json_encode($this->acceptedTypesForEncode()), $result);
     }
@@ -46,9 +48,11 @@ class EncoderTest extends Unit
      */
     public function testJsonEncodeEmptyData(): void
     {
+        //Act
         $encoder = new JsonEncoder($this->getUtilEncodingService());
         $result = $encoder->encode([]);
 
+        //Assert
         $this->assertEmpty($result);
         $this->assertIsString($result);
     }

@@ -33,16 +33,16 @@ class SparseFieldRequestBuilderPluginTest extends Unit
      */
     public function testSparseFieldRequestBuilderPlugin(): void
     {
-        //arrange
+        //Arrange
         $expectedResourceType = 'items';
         $expectedFields = ['att1', 'att2', 'att3'];
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
 
-        //act
+        //Act
         $sparseFieldRequestBuilderPlugin = new SparseFieldRequestBuilderPlugin();
         $glueRequestTransfer = $sparseFieldRequestBuilderPlugin->build($glueRequestTransfer);
 
-        //assert
+        //Assert
         $this->assertNotEmpty($glueRequestTransfer->getSparseResources()->getArrayCopy());
         $this->assertSame($expectedResourceType, $glueRequestTransfer->getSparseResources()->getArrayCopy()[0]->getResourceType());
         $this->assertSame($expectedFields[2], $glueRequestTransfer->getSparseResources()->getArrayCopy()[0]->getFields()[2]);

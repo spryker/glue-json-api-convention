@@ -34,9 +34,11 @@ class DecoderTest extends Unit
      */
     public function testEmptyStringJsonDecoder(): void
     {
+        //Act
         $decoder = new JsonDecoder($this->getUtilEncodingService());
         $result = $decoder->decode('');
 
+        //Assert
         $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
@@ -46,9 +48,11 @@ class DecoderTest extends Unit
      */
     public function testJsonDecoder(): void
     {
+        //Act
         $decoder = new JsonDecoder($this->getUtilEncodingService());
         $result = $decoder->decode($this->acceptedTypesForDecode());
 
+        //Assert
         $this->assertEquals(json_decode($this->acceptedTypesForDecode(), true), $result);
     }
 

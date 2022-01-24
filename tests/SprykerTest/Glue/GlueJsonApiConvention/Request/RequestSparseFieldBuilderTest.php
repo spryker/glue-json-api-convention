@@ -29,9 +29,9 @@ class RequestSparseFieldBuilderTest extends Unit
      */
     public function testSparseFields(): void
     {
+        //Arrange
         $expectedResourceType = 'items';
         $expectedFields = ['att1', 'att2', 'att3'];
-
         $glueRequestTransfer = (new GlueRequestTransfer())->setQueryFields([
             'fields' => [
                 'items' => 'att1,att2,att3',
@@ -42,9 +42,11 @@ class RequestSparseFieldBuilderTest extends Unit
             ],
         ]);
 
+        //Act
         $requestSparseFieldBuilder = new RequestSparseFieldBuilder();
         $glueRequestTransfer = $requestSparseFieldBuilder->extract($glueRequestTransfer);
 
+        //Assert
         $this->assertNotEmpty($glueRequestTransfer->getSparseResources()->getArrayCopy());
         $this->assertSame($expectedResourceType, $glueRequestTransfer->getSparseResources()->getArrayCopy()[0]->getResourceType());
         $this->assertSame($expectedFields[2], $glueRequestTransfer->getSparseResources()->getArrayCopy()[0]->getFields()[2]);
@@ -55,6 +57,7 @@ class RequestSparseFieldBuilderTest extends Unit
      */
     public function testSparseWithoutFields(): void
     {
+        //Arrange
         $glueRequestTransfer = (new GlueRequestTransfer())->setQueryFields([
             'page' => [
                 'limit' => 1,
@@ -62,9 +65,11 @@ class RequestSparseFieldBuilderTest extends Unit
             ],
         ]);
 
+        //Act
         $requestSparseFieldBuilder = new RequestSparseFieldBuilder();
         $glueRequestTransfer = $requestSparseFieldBuilder->extract($glueRequestTransfer);
 
+        //Assert
         $this->assertEmpty($glueRequestTransfer->getSparseResources()->getArrayCopy());
     }
 }

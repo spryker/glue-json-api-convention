@@ -33,15 +33,15 @@ class RelationshipRequestBuilderPluginTest extends Unit
      */
     public function testRelationshipRequestBuilderPluginTest(): void
     {
-        //arrange
+        //Arrange
         $expectedIncludes = ['resource1', 'resource2'];
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
 
-        //act
+        //Act
         $relationshipRequestBuilderPlugin = new RelationshipRequestBuilderPlugin();
         $glueRequestTransfer = $relationshipRequestBuilderPlugin->build($glueRequestTransfer);
 
-        //assert
+        //Assert
         $this->assertSame($expectedIncludes[0], $glueRequestTransfer->getIncludedRelationships()[0]);
         $this->assertSame($expectedIncludes[1], $glueRequestTransfer->getIncludedRelationships()[1]);
     }
