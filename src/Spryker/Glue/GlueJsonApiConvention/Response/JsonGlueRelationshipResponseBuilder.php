@@ -179,7 +179,7 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
      */
     protected function applyRelationshipPlugins(string $resourceName, array $resources, GlueRequestTransfer $glueRequestTransfer): array
     {
-        $relationshipPlugins = $this->resourceRelationshipProviderLoader->load($resourceName);
+        $relationshipPlugins = $this->resourceRelationshipProviderLoader->load($resourceName, $glueRequestTransfer);
         foreach ($relationshipPlugins as $relationshipPlugin) {
             if (!$this->hasRelationship($relationshipPlugin->getRelationshipResourceType(), $glueRequestTransfer)) {
                 continue;

@@ -159,14 +159,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     }
 
     /**
-     * @return array<\Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface>
-     */
-    protected function getApplicationPlugins(): array
-    {
-        return [];
-    }
-
-    /**
      * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestBuilderPluginInterface>
      */
     protected function getRequestBuilderPlugins(): array

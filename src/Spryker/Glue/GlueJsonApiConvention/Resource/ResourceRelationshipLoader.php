@@ -7,6 +7,8 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention\Resource;
 
+use Generated\Shared\Transfer\GlueRequestTransfer;
+
 class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
 {
     /**
@@ -24,13 +26,19 @@ class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
 
     /**
      * @param string $resourceName
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface>
      */
-    public function load(string $resourceName): array
+    public function load(string $resourceName, GlueRequestTransfer $glueRequestTransfer): array
     {
         foreach ($this->resourceRelationships as $resourceRelationship) {
             $resourceRelationshipCollection = $resourceRelationship->getResourceRelationshipCollection();
+
+            if (!$resourceRelationship->isApplicable($glueRequestTransfer)) {
+                return [];
+            }
+
             if ($resourceRelationshipCollection->hasRelationships($resourceName)) {
                 return $resourceRelationshipCollection->getRelationships($resourceName);
             }

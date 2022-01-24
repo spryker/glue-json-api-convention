@@ -7,12 +7,15 @@
 
 namespace Spryker\Glue\GlueJsonApiConvention\Resource;
 
+use Generated\Shared\Transfer\GlueRequestTransfer;
+
 interface ResourceRelationshipLoaderInterface
 {
     /**
      * @param string $resourceName
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface>
      */
-    public function load(string $resourceName): array;
+    public function load(string $resourceName, GlueRequestTransfer $glueRequestTransfer): array;
 }

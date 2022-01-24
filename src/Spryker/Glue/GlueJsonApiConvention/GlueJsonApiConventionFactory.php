@@ -24,8 +24,6 @@ use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
-use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatter;
-use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseFormatterInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
 
 /**
@@ -90,7 +88,7 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     /**
      * @return \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface
      */
-    public function createRelationshipResponse(): JsonGlueRelationshipResponseBuilderInterface
+    public function createJsonGlueRelationshipResponseBuilder(): JsonGlueRelationshipResponseBuilderInterface
     {
         return new JsonGlueRelationshipResponseBuilder($this->createResourceRelationshipLoader());
     }
