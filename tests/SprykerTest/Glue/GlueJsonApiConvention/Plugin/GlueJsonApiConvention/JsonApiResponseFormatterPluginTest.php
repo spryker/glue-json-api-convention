@@ -31,7 +31,7 @@ class JsonApiResponseFormatterPluginTest extends Unit
     /**
      * @return void
      */
-    public function testJsonApiResponseFormatterPluginTest(): void
+    public function testJsonApiResponseFormatterPlugin(): void
     {
         //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();

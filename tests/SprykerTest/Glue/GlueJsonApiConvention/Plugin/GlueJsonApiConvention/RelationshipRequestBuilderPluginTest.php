@@ -31,7 +31,7 @@ class RelationshipRequestBuilderPluginTest extends Unit
     /**
      * @return void
      */
-    public function testRelationshipRequestBuilderPluginTest(): void
+    public function testRelationshipRequestBuilderPlugin(): void
     {
         //Arrange
         $expectedIncludes = ['resource1', 'resource2'];
