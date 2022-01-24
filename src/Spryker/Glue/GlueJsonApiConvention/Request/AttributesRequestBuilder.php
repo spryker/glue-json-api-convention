@@ -12,6 +12,9 @@ use Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface;
 
 class AttributesRequestBuilder implements RequestBuilderInterface
 {
+    /**
+     * @var \Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface
+     */
     protected DecoderInterface $decoder;
 
     /**
