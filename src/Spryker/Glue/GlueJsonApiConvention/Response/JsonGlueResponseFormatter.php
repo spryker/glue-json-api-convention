@@ -205,19 +205,12 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     {
         $allowedResourceRelationshipKeys = [
             static::RESOURCE_TYPE,
-            static::RESOURCE_ID,
-            static::LINK_SELF,
-            static::RESPONSE_LINKS,
-            static::RESPONSE_RELATIONSHIPS,
+            static::RESOURCE_ID
         ];
         $filteredResourceRelationships = [];
 
         foreach ($resourceRelationships as $resourceRelationship) {
-            if ($resourceRelationship[static::RESPONSE_RELATIONSHIPS]) {
-                $resourceRelationship[static::RESPONSE_RELATIONSHIPS] = $this->filterResourceRelationships($resourceRelationship[static::RESPONSE_RELATIONSHIPS]);
-            }
-
-            $filteredResourceRelationships[] = array_filter(
+            $filteredResourceRelationships[$resourceRelationship[static::RESOURCE_TYPE]][static::RESPONSE_DATA][] = array_filter(
                 $resourceRelationship,
                 fn ($key) => in_array($key, $allowedResourceRelationshipKeys),
                 ARRAY_FILTER_USE_KEY,
