@@ -39,7 +39,11 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
      */
     public function buildResponse(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
-        $mainResourceType = $glueResponseTransfer->getResources()[0]->getType();
+        if (!isset($glueResponseTransfer->getResources()[0])) {
+            return $glueResponseTransfer;
+        }
+
+        $mainResourceType = $glueResponseTransfer->getResources()[0]->getTypeOrFail();
 
         $this->loadRelationships(
             $mainResourceType,
