@@ -14,7 +14,7 @@ use Spryker\Glue\Kernel\AbstractPlugin;
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class RequestRelationshipBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
+class RelationshipRequestBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
 {
     /**
      * {@inheritDoc}

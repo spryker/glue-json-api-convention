@@ -32,6 +32,18 @@ class DecoderTest extends Unit
     /**
      * @return void
      */
+    public function testEmptyStringJsonDecoder(): void
+    {
+        $decoder = new JsonDecoder($this->getUtilEncodingService());
+        $result = $decoder->decode('');
+
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * @return void
+     */
     public function testJsonDecoder(): void
     {
         $decoder = new JsonDecoder($this->getUtilEncodingService());

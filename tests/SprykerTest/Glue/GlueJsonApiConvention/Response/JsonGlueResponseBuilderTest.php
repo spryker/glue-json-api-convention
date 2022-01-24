@@ -50,7 +50,7 @@ class JsonGlueResponseBuilderTest extends Unit
      */
     public function testBuildResponseData(): void
     {
-        $jsonGlueResponseBuilder = new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter());
+        $jsonGlueResponseBuilder = new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter(), $this->getJsonApiConventionConfigMock());
         $buildResponse = $jsonGlueResponseBuilder->buildResponse(
             $this->getGlueResponseTransfer(),
             $this->getGlueRequestTransfer(),
@@ -100,6 +100,7 @@ class JsonGlueResponseBuilderTest extends Unit
             ->setResourceType('author')
             ->setFields(['type', 'attributes']);
         $sparseResources[] = (new GlueSparseResourceTransfer())
+            ->setResourceType('author')
             ->setFields(['type', 'attributes']);
 
         $includedRelationships = [];
