@@ -86,9 +86,45 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
                     continue;
                 }
 
-                $this->loadRelationships($resourceRelationship->getTypeOrFail(), [$resourceRelationship], $glueRequestTransfer, $resource->getId());
+                $this->loadRelationships($resourceRelationship->getTypeOrFail(), $resource->getRelationships()->getArrayCopy(), $glueRequestTransfer, $resource->getId());
             }
         }
+    }
+
+    /**
+     * @param string $resourceType
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return bool
+     */
+    protected function hasRelationship(string $resourceType, GlueRequestTransfer $glueRequestTransfer): bool
+    {
+        if ($resourceType === $glueRequestTransfer->getResourceOrFail()->getType()) {
+            return true;
+        }
+
+        return in_array($resourceType, $glueRequestTransfer->getIncludedRelationships());
+    }
+
+    /**
+     * @param string $resourceName
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resources
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return array<\Generated\Shared\Transfer\GlueResourceTransfer>
+     */
+    protected function applyRelationshipPlugins(string $resourceName, array $resources, GlueRequestTransfer $glueRequestTransfer): array
+    {
+        $relationshipPlugins = $this->resourceRelationshipProviderLoader->load($resourceName, $glueRequestTransfer);
+        foreach ($relationshipPlugins as $relationshipPlugin) {
+            if (!$this->hasRelationship($relationshipPlugin->getRelationshipResourceType(), $glueRequestTransfer)) {
+                continue;
+            }
+
+            $relationshipPlugin->addRelationships($resources, $glueRequestTransfer);
+        }
+
+        return $resources;
     }
 
     /**
@@ -153,42 +189,6 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
         $resource = $includedResourceRelationships[$resourceId];
 
         return !$resource->getRelationships();
-    }
-
-    /**
-     * @param string $resourceType
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return bool
-     */
-    protected function hasRelationship(string $resourceType, GlueRequestTransfer $glueRequestTransfer): bool
-    {
-        if ($resourceType === $glueRequestTransfer->getResourceOrFail()->getType()) {
-            return true;
-        }
-
-        return in_array($resourceType, $glueRequestTransfer->getIncludedRelationships());
-    }
-
-    /**
-     * @param string $resourceName
-     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resources
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return array<\Generated\Shared\Transfer\GlueResourceTransfer>
-     */
-    protected function applyRelationshipPlugins(string $resourceName, array $resources, GlueRequestTransfer $glueRequestTransfer): array
-    {
-        $relationshipPlugins = $this->resourceRelationshipProviderLoader->load($resourceName, $glueRequestTransfer);
-        foreach ($relationshipPlugins as $relationshipPlugin) {
-            if (!$this->hasRelationship($relationshipPlugin->getRelationshipResourceType(), $glueRequestTransfer)) {
-                continue;
-            }
-
-            $relationshipPlugin->addRelationships($resources, $glueRequestTransfer);
-        }
-
-        return $resources;
     }
 
     /**

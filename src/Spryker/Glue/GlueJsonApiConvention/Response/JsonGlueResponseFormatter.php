@@ -205,7 +205,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     {
         $allowedResourceRelationshipKeys = [
             static::RESOURCE_TYPE,
-            static::RESOURCE_ID
+            static::RESOURCE_ID,
         ];
         $filteredResourceRelationships = [];
 

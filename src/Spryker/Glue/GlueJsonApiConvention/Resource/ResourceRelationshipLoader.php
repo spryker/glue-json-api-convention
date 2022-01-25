@@ -33,12 +33,11 @@ class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
     public function load(string $resourceName, GlueRequestTransfer $glueRequestTransfer): array
     {
         foreach ($this->resourceRelationships as $resourceRelationship) {
-            $resourceRelationshipCollection = $resourceRelationship->getResourceRelationshipCollection();
-
             if (!$resourceRelationship->isApplicable($glueRequestTransfer)) {
                 return [];
             }
 
+            $resourceRelationshipCollection = $resourceRelationship->getResourceRelationshipCollection();
             if ($resourceRelationshipCollection->hasRelationships($resourceName)) {
                 return $resourceRelationshipCollection->getRelationships($resourceName);
             }
