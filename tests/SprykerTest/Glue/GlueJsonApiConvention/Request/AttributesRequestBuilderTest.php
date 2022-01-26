@@ -101,7 +101,7 @@ class AttributesRequestBuilderTest extends Unit
      *
      * @return \Generated\Shared\Transfer\GlueRequestTransfer
      */
-    public function extractAttributesRequest($glueRequestTransfer): GlueRequestTransfer
+    protected function extractAttributesRequest($glueRequestTransfer): GlueRequestTransfer
     {
         $attributesRequestBuilder = new AttributesRequestBuilder($this->createJsonDecoder());
 
@@ -111,7 +111,7 @@ class AttributesRequestBuilderTest extends Unit
     /**
      * @return \Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface
      */
-    public function createJsonDecoder(): DecoderInterface
+    protected function createJsonDecoder(): DecoderInterface
     {
         return new JsonDecoder($this->createUtilEncodingService());
     }

@@ -75,10 +75,7 @@ class GlueJsonApiConventionFactory extends AbstractFactory
      */
     public function createJsonGlueResponseBuilder(): JsonGlueResponseBuilderInterface
     {
-        return new JsonGlueResponseBuilder(
-            $this->createJsonGlueResponseFormatter(),
-            $this->getConfig(),
-        );
+        return new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter());
     }
 
     /**

@@ -39,6 +39,18 @@ class JsonApiResponseFormatterPluginTest extends Unit
 
         //Act
         $jsonApiResponseFormatterPlugin = new JsonApiResponseFormatterPlugin();
-        $jsonApiResponseFormatterPlugin->build($glueResponseTransfer, $glueRequestTransfer);
+        $glueResponseTransfer = $jsonApiResponseFormatterPlugin->build($glueResponseTransfer, $glueRequestTransfer);
+
+        // Assert
+        $content = $glueResponseTransfer->getContent();
+        $this->assertNotNull($content);
+        $this->assertIsString($content);
+        $this->assertStringContainsString('articles', $content);
+
+        $decodedContent = json_decode($content, true);
+        $this->assertIsArray($decodedContent);
+        $this->assertArrayHasKey('data', $decodedContent);
+        $this->assertArrayHasKey('id', $decodedContent['data']);
+        $this->assertSame('1', $decodedContent['data']['id']);
     }
 }

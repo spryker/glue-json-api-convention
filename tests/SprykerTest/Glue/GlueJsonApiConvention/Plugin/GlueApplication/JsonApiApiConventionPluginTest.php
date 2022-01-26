@@ -32,14 +32,6 @@ class JsonApiApiConventionPluginTest extends Unit
     protected $tester;
 
     /**
-     * @return \Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface
-     */
-    public function createJsonApiApiConventionPlugin(): ApiConventionPluginInterface
-    {
-        return new JsonApiApiConventionPlugin();
-    }
-
-    /**
      * @return void
      */
     public function testJsonApiApiConventionPluginIsApplicable(): void
@@ -133,5 +125,13 @@ class JsonApiApiConventionPluginTest extends Unit
         //Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
         $jsonApiApiConventionPlugin->formatResponse($glueResponseTransfer, $glueRequestTransfer);
+    }
+
+    /**
+     * @return \Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface
+     */
+    protected function createJsonApiApiConventionPlugin(): ApiConventionPluginInterface
+    {
+        return new JsonApiApiConventionPlugin();
     }
 }

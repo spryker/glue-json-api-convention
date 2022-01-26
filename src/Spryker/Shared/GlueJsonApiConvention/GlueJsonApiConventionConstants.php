@@ -20,5 +20,5 @@ interface GlueJsonApiConventionConstants
      *
      * @var string
      */
-    public const GLUE_DOMAIN = 'GLUE_STOREFRONT_API_APPLICATION:GLUE_STOREFRONT_API_HOST';
+    public const GLUE_DOMAIN = 'GLUE_DOMAIN';
 }

@@ -51,19 +51,23 @@ class JsonGlueResponseBuilderTest extends Unit
     public function testBuildResponseData(): void
     {
         //Act
-        $jsonGlueResponseBuilder = new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter(), $this->getJsonApiConventionConfigMock());
+        $jsonGlueResponseBuilder = new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter());
         $buildResponse = $jsonGlueResponseBuilder->buildResponse(
             $this->getGlueResponseTransfer(),
             $this->getGlueRequestTransfer(),
         );
 
-        $content = $buildResponse->getContent();
-
         //Assert
+        $content = $buildResponse->getContent();
         $this->assertNotNull($content);
         $this->assertIsString($content);
         $this->assertStringContainsString('articles', $content);
+
         $decodedContent = json_decode($content, true);
+        $this->assertIsArray($decodedContent);
+        $this->assertArrayHasKey('data', $decodedContent);
+        $this->assertArrayHasKey('id', $decodedContent['data']);
+        $this->assertSame('1', $decodedContent['data']['id']);
     }
 
     /**

@@ -19,18 +19,11 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
     protected $jsonGlueResponseFormatter;
 
     /**
-     * @var \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig
-     */
-    protected $jsonApiConventionConfig;
-
-    /**
      * @param \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter
-     * @param \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig $jsonApiConventionConfig
      */
-    public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter, GlueJsonApiConventionConfig $jsonApiConventionConfig)
+    public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter)
     {
         $this->jsonGlueResponseFormatter = $jsonGlueResponseFormatter;
-        $this->jsonApiConventionConfig = $jsonApiConventionConfig;
     }
 
     /**

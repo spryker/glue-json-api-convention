@@ -43,11 +43,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     /**
      * @var string
      */
-    protected const COLLECTION_IDENTIFIER_CURRENT_USER = 'mine';
-
-    /**
-     * @var string
-     */
     protected const LINK_SELF = 'self';
 
     /**
@@ -151,12 +146,9 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         $method = $glueRequestTransfer->getMethod();
         $idResource = $glueRequestTransfer->getResourceOrFail()->getId();
 
-        if ($method === Request::METHOD_GET && ($idResource === null || $this->isCurrentUserCollectionResource($idResource))) {
+        if ($method === Request::METHOD_GET && $idResource === null) {
             $linkParts = [];
             $linkParts[] = $glueRequestTransfer->getResourceOrFail()->getType();
-            if ($this->isCurrentUserCollectionResource($idResource)) {
-                $linkParts[] = static::COLLECTION_IDENTIFIER_CURRENT_USER;
-            }
             $queryString = $this->buildQueryString($glueRequestTransfer);
 
             return $this->formatLinks([
@@ -205,16 +197,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
-     * @param string|null $idResource
-     *
-     * @return bool
-     */
-    protected function isCurrentUserCollectionResource(?string $idResource): bool
-    {
-        return $idResource === static::COLLECTION_IDENTIFIER_CURRENT_USER;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
      *
@@ -225,7 +207,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         $resourceId = $glueRequestTransfer->getResourceOrFail()->getId();
         $method = $glueRequestTransfer->getMethod();
 
-        return count($glueResources) === 1 && (($resourceId && $resourceId !== static::COLLECTION_IDENTIFIER_CURRENT_USER) || $method === Request::METHOD_POST);
+        return count($glueResources) === 1 && ($resourceId || $method === Request::METHOD_POST);
     }
 
     /**
