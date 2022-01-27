@@ -20,5 +20,5 @@ interface GlueJsonApiConventionConstants
      *
      * @var string
      */
-    public const GLUE_DOMAIN = 'GLUE_DOMAIN';
+    public const GLUE_DOMAIN = 'GLUE_JSON_API_CONVENTION:GLUE_DOMAIN';
 }
