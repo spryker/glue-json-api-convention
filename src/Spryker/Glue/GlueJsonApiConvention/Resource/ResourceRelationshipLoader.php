@@ -12,12 +12,12 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
 {
     /**
-     * @var array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface>
+     * @var array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface>
      */
     protected $resourceRelationships;
 
     /**
-     * @param array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface> $resourceRelationships
+     * @param array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface> $resourceRelationships
      */
     public function __construct(array $resourceRelationships)
     {

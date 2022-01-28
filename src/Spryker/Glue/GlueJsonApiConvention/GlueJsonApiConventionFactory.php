@@ -102,7 +102,7 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     }
 
     /**
-     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface>
+     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface>
      */
     public function getRelationshipProviderPlugins(): array
     {
