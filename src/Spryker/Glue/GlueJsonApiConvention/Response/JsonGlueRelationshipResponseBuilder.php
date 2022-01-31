@@ -82,11 +82,16 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
 
         foreach ($resources as $resource) {
             foreach ($resource->getRelationships() as $resourceRelationship) {
-                if (!$this->hasRelationship($resourceRelationship->getTypeOrFail(), $glueRequestTransfer)) {
+                if (!$this->hasRelationship($resourceRelationship->getResources()->getArrayCopy()[0]->getTypeOrFail(), $glueRequestTransfer)) {
                     continue;
                 }
 
-                $this->loadRelationships($resourceRelationship->getTypeOrFail(), $resource->getRelationships()->getArrayCopy(), $glueRequestTransfer, $resource->getId());
+                $this->loadRelationships(
+                    $resourceRelationship->getResources()->getArrayCopy()[0]->getTypeOrFail(),
+                    $resourceRelationship->getResources()->getArrayCopy(),
+                    $glueRequestTransfer,
+                    $resource->getId(),
+                );
             }
         }
     }
@@ -156,20 +161,22 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
         GlueRequestTransfer $glueRequestTransfer,
         array &$includedResourceRelationships
     ): void {
-        foreach ($resourceRelationships as $resource) {
-            $resourceType = $resource->getTypeOrFail();
+        foreach ($resourceRelationships as $resources) {
+            foreach ($resources->getResources() as $resource) {
+                $resourceType = $resource->getTypeOrFail();
 
-            if (!$this->hasRelationship($resourceType, $glueRequestTransfer)) {
-                continue;
-            }
+                if (!$this->hasRelationship($resourceType, $glueRequestTransfer)) {
+                    continue;
+                }
 
-            if ($resource->getRelationships()) {
-                $this->processRelationships((array)$resource->getRelationships(), $glueRequestTransfer, $includedResourceRelationships);
-            }
+                if ($resource->getRelationships()) {
+                    $this->processRelationships((array)$resource->getRelationships(), $glueRequestTransfer, $includedResourceRelationships);
+                }
 
-            $resourceId = $resourceType . ':' . $resource->getId();
-            if ($this->isResourceCanBeIncluded($includedResourceRelationships, $resourceId)) {
-                $includedResourceRelationships[$resourceId] = $resource;
+                $resourceId = $resourceType . ':' . $resource->getId();
+                if ($this->isResourceCanBeIncluded($includedResourceRelationships, $resourceId)) {
+                    $includedResourceRelationships[$resourceId] = $resource;
+                }
             }
         }
     }

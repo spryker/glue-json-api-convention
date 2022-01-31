@@ -9,6 +9,7 @@ namespace SprykerTest\Glue\GlueJsonApiConvention\Response;
 
 use ArrayObject;
 use Codeception\Test\Unit;
+use Generated\Shared\Transfer\GlueRelationshipTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
@@ -53,7 +54,9 @@ class JsonGlueRelationshipResponseBuilderTest extends Unit
                 function (array $resources, GlueRequestTransfer $glueRequestTransfer): void {
                     foreach ($resources as $resource) {
                         $resource->addRelationship(
-                            $this->createResource(static::FAKE_RELATIONSHIP_RESOURCE_NAME, 1),
+                            (new GlueRelationshipTransfer())->addResource(
+                                $this->createResource(static::FAKE_RELATIONSHIP_RESOURCE_NAME, 1),
+                            ),
                         );
                     }
                 },
@@ -86,8 +89,8 @@ class JsonGlueRelationshipResponseBuilderTest extends Unit
         //assert
         $relationships = $glueResponseTransfer->getResources()[0]->getRelationships();
         $this->assertCount(1, $relationships);
-        $this->assertSame(1, $relationships[0]->getId());
-        $this->assertSame(static::FAKE_RELATIONSHIP_RESOURCE_NAME, $relationships[0]->getType());
+        $this->assertSame(1, $relationships[0]->getResources()[0]->getId());
+        $this->assertSame(static::FAKE_RELATIONSHIP_RESOURCE_NAME, $relationships[0]->getResources()[0]->getType());
 
         $included = $glueResponseTransfer->getIncludedRelationships();
         $this->assertCount(1, $included);

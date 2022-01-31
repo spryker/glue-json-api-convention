@@ -67,6 +67,11 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     protected const RESOURCE_ATTRIBUTES = 'attributes';
 
     /**
+     * @var string
+     */
+    protected const RESOURCES = 'resources';
+
+    /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface
      */
     protected $jsonEncoder;
@@ -210,11 +215,13 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         $filteredResourceRelationships = [];
 
         foreach ($resourceRelationships as $resourceRelationship) {
-            $filteredResourceRelationships[$resourceRelationship[static::RESOURCE_TYPE]][static::RESPONSE_DATA][] = array_filter(
-                $resourceRelationship,
-                fn ($key) => in_array($key, $allowedResourceRelationshipKeys),
-                ARRAY_FILTER_USE_KEY,
-            );
+            foreach ($resourceRelationship[static::RESOURCES] as $resource) {
+                $filteredResourceRelationships[$resource[static::RESOURCE_TYPE]][static::RESPONSE_DATA][] = array_filter(
+                    $resource,
+                    fn ($key) => in_array($key, $allowedResourceRelationshipKeys),
+                    ARRAY_FILTER_USE_KEY,
+                );
+            }
         }
 
         return $filteredResourceRelationships;

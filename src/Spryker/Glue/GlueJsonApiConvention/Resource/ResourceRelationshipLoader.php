@@ -14,14 +14,14 @@ class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
     /**
      * @var array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface>
      */
-    protected $resourceRelationships;
+    protected $relationshipProviderPlugins;
 
     /**
-     * @param array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface> $resourceRelationships
+     * @param array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface> $relationshipProviderPlugins
      */
-    public function __construct(array $resourceRelationships)
+    public function __construct(array $relationshipProviderPlugins)
     {
-        $this->resourceRelationships = $resourceRelationships;
+        $this->relationshipProviderPlugins = $relationshipProviderPlugins;
     }
 
     /**
@@ -32,17 +32,18 @@ class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
      */
     public function load(string $resourceName, GlueRequestTransfer $glueRequestTransfer): array
     {
-        foreach ($this->resourceRelationships as $resourceRelationship) {
-            if (!$resourceRelationship->isApplicable($glueRequestTransfer)) {
-                return [];
+        $resourceRelationships = [];
+        foreach ($this->relationshipProviderPlugins as $relationshipProviderPlugin) {
+            if (!$relationshipProviderPlugin->isApplicable($glueRequestTransfer)) {
+                continue;
             }
 
-            $resourceRelationshipCollection = $resourceRelationship->getResourceRelationshipCollection();
+            $resourceRelationshipCollection = $relationshipProviderPlugin->getResourceRelationshipCollection();
             if ($resourceRelationshipCollection->hasRelationships($resourceName)) {
-                return $resourceRelationshipCollection->getRelationships($resourceName);
+                $resourceRelationships = array_merge($resourceRelationships, $resourceRelationshipCollection->getRelationships($resourceName));
             }
         }
 
-        return [];
+        return $resourceRelationships;
     }
 }
