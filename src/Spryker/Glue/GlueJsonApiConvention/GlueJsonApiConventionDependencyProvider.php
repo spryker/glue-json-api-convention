@@ -52,6 +52,11 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     public const PLUGINS_RESPONSE_FORMATTER = 'PLUGINS_RESPONSE_FORMATTER';
 
     /**
+     * @var string
+     */
+    public const PLUGINS_RELATIONSHIP_PROVIDER = 'PLUGINS_RELATIONSHIP_PROVIDER';
+
+    /**
      * @param \Spryker\Glue\Kernel\Container $container
      *
      * @return \Spryker\Glue\Kernel\Container
@@ -64,6 +69,7 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         $container = $this->addRequestValidatorPlugins($container);
         $container = $this->addRequestAfterRoutingValidatorPlugins($container);
         $container = $this->addResponseFormatterPlugins($container);
+        $container = $this->addRelationshipProviderPlugins($container);
 
         return $container;
     }
@@ -139,6 +145,20 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     }
 
     /**
+     * @param \Spryker\Glue\Kernel\Container $container
+     *
+     * @return \Spryker\Glue\Kernel\Container
+     */
+    protected function addRelationshipProviderPlugins(Container $container): Container
+    {
+        $container->set(static::PLUGINS_RELATIONSHIP_PROVIDER, function (Container $container) {
+            return $this->getRelationshipProviderPlugins();
+        });
+
+        return $container;
+    }
+
+    /**
      * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestBuilderPluginInterface>
      */
     protected function getRequestBuilderPlugins(): array
@@ -166,6 +186,14 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
      * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResponseFormatterPluginInterface>
      */
     protected function getResponseFormatterPlugins(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\StorefrontApiRelationshipProviderPluginInterface>
+     */
+    public function getRelationshipProviderPlugins(): array
     {
         return [];
     }

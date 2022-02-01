@@ -15,7 +15,10 @@
         <property name="attributes" type="Abstract"/>
         <property name="links" type="GlueLink[]" singular="link"/>
         <property name="self" type="GlueLink"/>
-        <property name="relationships" type="GlueResource[]" associative="true" singular="relationship"/>
+        <property name="relationships" type="GlueRelationship[]" singular="relationship"/>
+    </transfer>
+    <transfer name="GlueRelationship">
+        <property name="resources" type="GlueResource[]" singular="resource"/>
     </transfer>
     <transfer name="GlueSparseResource">
         <property name="resourceType" type="string"/>
@@ -27,6 +30,7 @@
         <property name="attributes" type="Abstract"/>
         <property name="resources" type="GlueResource[]" singular="resource"/>
         <property name="errors" type="GlueError[]" singular="error"/>
+        <property name="includedRelationships" type="string[]" singular="includedRelationship"/>
     </transfer>
     <transfer name="GlueError">
         <property name="code" type="string"/>

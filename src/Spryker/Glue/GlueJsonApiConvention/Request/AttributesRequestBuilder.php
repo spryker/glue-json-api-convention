@@ -9,7 +9,6 @@ namespace Spryker\Glue\GlueJsonApiConvention\Request;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
 
 class AttributesRequestBuilder implements RequestBuilderInterface
 {

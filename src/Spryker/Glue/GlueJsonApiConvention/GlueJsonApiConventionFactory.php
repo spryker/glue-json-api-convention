@@ -16,6 +16,10 @@ use Spryker\Glue\GlueJsonApiConvention\Request\AttributesRequestBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoader;
+use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
+use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
@@ -76,6 +80,30 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     public function createJsonGlueResponseBuilder(): JsonGlueResponseBuilderInterface
     {
         return new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter());
+    }
+
+    /**
+     * @return \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface
+     */
+    public function createJsonGlueRelationshipResponseBuilder(): JsonGlueRelationshipResponseBuilderInterface
+    {
+        return new JsonGlueRelationshipResponseBuilder($this->createResourceRelationshipLoader());
+    }
+
+    /**
+     * @return \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface
+     */
+    public function createResourceRelationshipLoader(): ResourceRelationshipLoaderInterface
+    {
+        return new ResourceRelationshipLoader($this->getRelationshipProviderPlugins());
+    }
+
+    /**
+     * @return array<\Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RelationshipProviderPluginInterface>
+     */
+    public function getRelationshipProviderPlugins(): array
+    {
+        return $this->getProvidedDependency(GlueJsonApiConventionDependencyProvider::PLUGINS_RELATIONSHIP_PROVIDER);
     }
 
     /**

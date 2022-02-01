@@ -9,6 +9,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 
 use ArrayObject;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,6 +62,11 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     protected const RESOURCE_ATTRIBUTES = 'attributes';
 
     /**
+     * @var string
+     */
+    protected const RESOURCES = 'resources';
+
+    /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface
      */
     protected $jsonEncoder;
@@ -81,17 +87,18 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
-     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $glueResources
+     * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
      * @param array<string, mixed> $sparseFields
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string
      */
     public function formatResponseData(
-        array $glueResources,
+        GlueResponseTransfer $glueResponseTransfer,
         array $sparseFields,
         GlueRequestTransfer $glueRequestTransfer
     ): string {
+        $glueResources = $glueResponseTransfer->getResources()->getArrayCopy();
         $data = $this->getResourceData($glueResources, $glueRequestTransfer);
         $responseData = [];
         if ($this->isSingleObjectRequest($glueRequestTransfer, $glueResources)) {
@@ -100,6 +107,8 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
             $responseData[static::RESPONSE_DATA] = $data;
             $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
         }
+
+        $responseData[static::RESPONSE_INCLUDED] = $this->getResourceData($glueResponseTransfer->getIncludedRelationships(), $glueRequestTransfer);
 
         return $this->jsonEncoder->encode($responseData);
     }
@@ -173,10 +182,41 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
             if (!array_key_exists(static::RESPONSE_LINKS, $resource)) {
                 $resource[static::RESPONSE_LINKS] = $this->getResponseLink($resource, $glueRequestTransfer);
             }
+
+            if (isset($resource[static::RESPONSE_RELATIONSHIPS])) {
+                $resource[static::RESPONSE_RELATIONSHIPS] = $this->filterResourceRelationships($resource[static::RESPONSE_RELATIONSHIPS]);
+            }
+
             $resourcesData[] = $resource;
         }
 
         return $resourcesData;
+    }
+
+    /**
+     * @param array<mixed> $resourceRelationships
+     *
+     * @return array<mixed>
+     */
+    protected function filterResourceRelationships(array $resourceRelationships): array
+    {
+        $allowedResourceRelationshipKeys = [
+            static::RESOURCE_TYPE,
+            static::RESOURCE_ID,
+        ];
+        $filteredResourceRelationships = [];
+
+        foreach ($resourceRelationships as $resourceRelationship) {
+            foreach ($resourceRelationship[static::RESOURCES] as $resource) {
+                $filteredResourceRelationships[$resource[static::RESOURCE_TYPE]][static::RESPONSE_DATA][] = array_filter(
+                    $resource,
+                    fn ($key) => in_array($key, $allowedResourceRelationshipKeys),
+                    ARRAY_FILTER_USE_KEY,
+                );
+            }
+        }
+
+        return $filteredResourceRelationships;
     }
 
     /**
