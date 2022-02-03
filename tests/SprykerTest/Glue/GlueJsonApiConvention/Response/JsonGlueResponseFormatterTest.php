@@ -11,6 +11,7 @@ use ArrayObject;
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
+use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceBridge;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
@@ -108,9 +109,9 @@ class JsonGlueResponseFormatterTest extends Unit
     }
 
     /**
-     * @return array
+     * @return \Generated\Shared\Transfer\GlueResponseTransfer
      */
-    protected function getGlueResourcesTestData(): array
+    protected function getGlueResourcesTestData(): GlueResponseTransfer
     {
         $links = new ArrayObject();
         $links['self'] = 'http://example.com/articles/1';
@@ -120,7 +121,10 @@ class JsonGlueResponseFormatterTest extends Unit
             ->setId('1')
             ->setLinks($links);
 
-        return [$resourceTransfer];
+        $glueResponseTransfer = (new GlueResponseTransfer())
+            ->addResource($resourceTransfer);
+
+        return $glueResponseTransfer;
     }
 
     /**
