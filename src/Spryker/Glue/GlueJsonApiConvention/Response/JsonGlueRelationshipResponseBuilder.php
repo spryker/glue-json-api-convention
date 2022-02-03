@@ -150,7 +150,7 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
     }
 
     /**
-     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resourceRelationships
+     * @param array<\Generated\Shared\Transfer\GlueRelationshipTransfer> $resourceRelationships
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $includedResourceRelationships
      *
