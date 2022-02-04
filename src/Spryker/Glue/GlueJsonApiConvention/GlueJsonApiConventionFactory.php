@@ -14,7 +14,10 @@ use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\JsonEncoder;
 use Spryker\Glue\GlueJsonApiConvention\Request\AttributesRequestBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface;
+use Spryker\Glue\GlueJsonApiConvention\Request\RequestFilterFieldBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Request\RequestPaginationParameterBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Request\RequestSortParameterBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoader;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
@@ -31,6 +34,30 @@ use Spryker\Glue\Kernel\AbstractFactory;
  */
 class GlueJsonApiConventionFactory extends AbstractFactory
 {
+    /**
+     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
+     */
+    public function createRequestPaginationParameterBuilder(): RequestBuilderInterface
+    {
+        return new RequestPaginationParameterBuilder();
+    }
+
+    /**
+     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
+     */
+    public function createRequestSortParameterBuilder(): RequestBuilderInterface
+    {
+        return new RequestSortParameterBuilder();
+    }
+
+    /**
+     * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
+     */
+    public function createRequestFilterFieldBuilder(): RequestBuilderInterface
+    {
+        return new RequestFilterFieldBuilder();
+    }
+
     /**
      * @return \Spryker\Glue\GlueJsonApiConvention\Request\RequestBuilderInterface
      */
