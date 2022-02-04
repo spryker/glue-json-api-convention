@@ -29,7 +29,7 @@ class JsonApiResponseFormatterPlugin extends AbstractPlugin implements ResponseF
      */
     public function build(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
-        return $this->getFactory()->createJsonGlueResponseBuilder()->buildResponse(
+        return $this->getFactory()->createJsonApiResponseBuilder()->buildResponse(
             $glueResponseTransfer,
             $glueRequestTransfer,
         );

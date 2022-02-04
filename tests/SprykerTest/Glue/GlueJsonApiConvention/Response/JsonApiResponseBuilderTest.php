@@ -18,7 +18,7 @@ use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionT
 use Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Encoder\JsonEncoder;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
-use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Response\JsonApiResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
 
@@ -29,11 +29,11 @@ use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterfa
  * @group Glue
  * @group GlueJsonApiConvention
  * @group Response
- * @group JsonGlueResponseBuilderTest
+ * @group JsonApiResponseBuilderTest
  *
  * Add your own group annotations below this line
  */
-class JsonGlueResponseBuilderTest extends Unit
+class JsonApiResponseBuilderTest extends Unit
 {
     /**
      * @var string
@@ -51,8 +51,8 @@ class JsonGlueResponseBuilderTest extends Unit
     public function testBuildResponseData(): void
     {
         //Act
-        $jsonGlueResponseBuilder = new JsonGlueResponseBuilder($this->createJsonGlueResponseFormatter());
-        $buildResponse = $jsonGlueResponseBuilder->buildResponse(
+        $jsonApiResponseBuilder = new JsonApiResponseBuilder($this->createJsonGlueResponseFormatter());
+        $buildResponse = $jsonApiResponseBuilder->buildResponse(
             $this->getGlueResponseTransfer(),
             $this->getGlueRequestTransfer(),
         );

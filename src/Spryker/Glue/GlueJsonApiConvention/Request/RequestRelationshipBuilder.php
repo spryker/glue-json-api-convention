@@ -30,7 +30,6 @@ class RequestRelationshipBuilder implements RequestBuilderInterface
         if (!$queryFields[static::QUERY_INCLUDE]) {
             return $glueRequestTransfer->setExcludeRelationships(true);
         }
-        $includedRelationships = [];
 
         return $glueRequestTransfer->setIncludedRelationships(explode(',', trim($queryFields[static::QUERY_INCLUDE])));
     }

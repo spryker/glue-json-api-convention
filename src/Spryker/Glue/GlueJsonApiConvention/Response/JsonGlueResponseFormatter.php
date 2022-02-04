@@ -180,7 +180,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         foreach ($glueResources as $resource) {
             $resource = array_filter($resource->toArray());
             if (!array_key_exists(static::RESPONSE_LINKS, $resource)) {
-                $resource[static::RESPONSE_LINKS] = $this->getResponseLink($resource, $glueRequestTransfer);
+                $resource[static::RESPONSE_LINKS] = $this->getResourceSelfLink($resource, $glueRequestTransfer);
             }
 
             if (isset($resource[static::RESPONSE_RELATIONSHIPS])) {
@@ -225,7 +225,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
      *
      * @return array<string, string>
      */
-    protected function getResponseLink(array $resource, GlueRequestTransfer $glueRequestTransfer): array
+    protected function getResourceSelfLink(array $resource, GlueRequestTransfer $glueRequestTransfer): array
     {
         $link = $resource[static::RESOURCE_TYPE];
         if ($resource[static::RESOURCE_ID]) {

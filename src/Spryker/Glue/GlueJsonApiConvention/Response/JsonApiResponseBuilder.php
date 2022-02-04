@@ -11,7 +11,7 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 
-class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
+class JsonApiResponseBuilder implements JsonApiResponseBuilderInterface
 {
     /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface
@@ -36,6 +36,7 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
         GlueResponseTransfer $glueResponseTransfer,
         GlueRequestTransfer $glueRequestTransfer
     ): GlueResponseTransfer {
+        $glueResponseTransfer->setFormat(GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE);
         if ($glueResponseTransfer->getErrors()->count()) {
             $content = $this->jsonGlueResponseFormatter->formatErrorResponse(
                 $glueResponseTransfer->getErrors(),
@@ -50,7 +51,6 @@ class JsonGlueResponseBuilder implements JsonGlueResponseBuilderInterface
             return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseWithEmptyResource($glueRequestTransfer));
         }
 
-        $glueResponseTransfer->setFormat(GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE);
         $sparseFields = $this->getSparseFields($glueRequestTransfer);
 
         return $glueResponseTransfer->setContent($this->jsonGlueResponseFormatter->formatResponseData(
