@@ -81,6 +81,10 @@ class GlueJsonApiConventionTester extends Actor
                 'limit' => 1,
                 'offset' => 10,
             ],
+            'filter' => [
+                'items.name' => 'item name',
+            ],
+            'sort' => 'field1,-field2',
         ])
             ->setPath(static::PATH)
             ->setMeta([static::META_KEY => [static::CONTENT_TYPE]])
