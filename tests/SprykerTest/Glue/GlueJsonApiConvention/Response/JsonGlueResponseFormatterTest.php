@@ -52,8 +52,7 @@ class JsonGlueResponseFormatterTest extends Unit
         $formatedResponseData = $jsonGlueResponseFormatter->formatResponseData(
             $this->getGlueResourcesTestData(),
             $this->getSparseFieldsTestData(),
-            (new GlueRequestTransfer())->setExcludeRelationships(false)
-                ->setResource((new GlueResourceTransfer())),
+            (new GlueRequestTransfer())->setResource((new GlueResourceTransfer())),
         );
 
         //Assert
@@ -77,8 +76,7 @@ class JsonGlueResponseFormatterTest extends Unit
         $formatedResponseData = $jsonGlueResponseFormatter->formatResponseData(
             $this->getGlueResourcesTestData(),
             $this->getSparseFieldsTestData(),
-            (new GlueRequestTransfer())->setExcludeRelationships(true)
-                ->setResource((new GlueResourceTransfer())),
+            (new GlueRequestTransfer())->setResource((new GlueResourceTransfer())),
         );
 
         //Assert

@@ -34,7 +34,7 @@ interface JsonGlueResponseFormatterInterface
     public function formatResponseWithEmptyResource(GlueRequestTransfer $glueRequestTransfer): string;
 
     /**
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\RestErrorMessageTransfer> $restErrorMessageTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\GlueErrorTransfer> $glueErrorTransfers
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string

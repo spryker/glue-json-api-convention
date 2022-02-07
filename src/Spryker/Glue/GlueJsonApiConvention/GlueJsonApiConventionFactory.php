@@ -21,10 +21,10 @@ use Spryker\Glue\GlueJsonApiConvention\Request\RequestSortParameterBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Request\RequestSparseFieldBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoader;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonApiResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonApiResponseBuilderInterface;
+use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface;
 use Spryker\Glue\Kernel\AbstractFactory;
@@ -110,11 +110,11 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     }
 
     /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface
+     * @return \Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilderInterface
      */
-    public function createJsonGlueRelationshipResponseBuilder(): JsonGlueRelationshipResponseBuilderInterface
+    public function createRelationshipResponseBuilder(): RelationshipResponseBuilderInterface
     {
-        return new JsonGlueRelationshipResponseBuilder($this->createResourceRelationshipLoader());
+        return new RelationshipResponseBuilder($this->createResourceRelationshipLoader());
     }
 
     /**

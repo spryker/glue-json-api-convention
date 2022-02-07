@@ -40,10 +40,10 @@ class ResourceRelationshipLoader implements ResourceRelationshipLoaderInterface
 
             $resourceRelationshipCollection = $relationshipProviderPlugin->getResourceRelationshipCollection();
             if ($resourceRelationshipCollection->hasRelationships($resourceName)) {
-                $resourceRelationships = array_merge($resourceRelationships, $resourceRelationshipCollection->getRelationships($resourceName));
+                $resourceRelationships[] = $resourceRelationshipCollection->getRelationships($resourceName);
             }
         }
 
-        return $resourceRelationships;
+        return array_merge(...$resourceRelationships);
     }
 }

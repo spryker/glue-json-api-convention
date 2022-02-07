@@ -88,6 +88,6 @@ class RequestRelationshipBuilderTest extends Unit
         $glueRequestTransfer = $requestRelationshipBuilder->extract($glueRequestTransfer);
 
         //Assert
-        $this->assertTrue($glueRequestTransfer->getExcludeRelationships());
+        $this->assertEmpty($glueRequestTransfer->getIncludedRelationships());
     }
 }

@@ -4,7 +4,6 @@
         <property name="resource" type="GlueResource"/>
         <property name="sparseResources" type="GlueSparseResource[]" singular="sparseResource"/>
         <property name="includedRelationships" type="string[]" singular="includedRelationship"/>
-        <property name="excludeRelationships" type="bool"/>
         <property name="queryFields" type="array" associative="true" singular="queryField"/>
         <property name="requestedFormat" type="string"/>
         <property name="attributes" type="array" singular="attribute"/>

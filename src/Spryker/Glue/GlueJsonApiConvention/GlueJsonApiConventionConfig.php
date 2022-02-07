@@ -24,7 +24,7 @@ class GlueJsonApiConventionConfig extends AbstractBundleConfig
 
     /**
      * Specification:
-     *  - Domain name of glue application to build API links.
+     *  - Domain name of current API base URL to build API links.
      *
      * @api
      *

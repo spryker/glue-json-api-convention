@@ -11,7 +11,7 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
 
-class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipResponseBuilderInterface
+class RelationshipResponseBuilder implements RelationshipResponseBuilderInterface
 {
     /**
      * @var \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface
@@ -169,7 +169,7 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
                     continue;
                 }
 
-                if ($resource->getRelationships()) {
+                if ($resource->getRelationships()->count() !== 0) {
                     $this->processRelationships((array)$resource->getRelationships(), $glueRequestTransfer, $includedResourceRelationships);
                 }
 
@@ -195,7 +195,7 @@ class JsonGlueRelationshipResponseBuilder implements JsonGlueRelationshipRespons
 
         $resource = $includedResourceRelationships[$resourceId];
 
-        return !$resource->getRelationships();
+        return $resource->getRelationships()->count() === 0;
     }
 
     /**

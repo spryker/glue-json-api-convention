@@ -44,11 +44,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     /**
      * @var string
      */
-    public const PLUGINS_RESOURCE_EXECUTOR = 'PLUGINS_RESOURCE_EXECUTOR';
-
-    /**
-     * @var string
-     */
     public const PLUGINS_RESPONSE_FORMATTER = 'PLUGINS_RESPONSE_FORMATTER';
 
     /**

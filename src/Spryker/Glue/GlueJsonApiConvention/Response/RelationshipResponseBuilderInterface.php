@@ -10,7 +10,7 @@ namespace Spryker\Glue\GlueJsonApiConvention\Response;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 
-interface JsonGlueRelationshipResponseBuilderInterface
+interface RelationshipResponseBuilderInterface
 {
     /**
      * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer

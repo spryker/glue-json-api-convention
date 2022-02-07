@@ -28,8 +28,8 @@ class RelationshipResponseFormatterPlugin extends AbstractPlugin implements Resp
      *
      * @return \Generated\Shared\Transfer\GlueResponseTransfer
      */
-    public function build(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
+    public function format(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
-        return $this->getFactory()->createJsonGlueRelationshipResponseBuilder()->buildResponse($glueResponseTransfer, $glueRequestTransfer);
+        return $this->getFactory()->createRelationshipResponseBuilder()->buildResponse($glueResponseTransfer, $glueRequestTransfer);
     }
 }

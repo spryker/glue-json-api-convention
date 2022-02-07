@@ -108,7 +108,10 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
             $responseData[static::RESPONSE_LINKS] = $this->buildCollectionLink($glueRequestTransfer);
         }
 
-        $responseData[static::RESPONSE_INCLUDED] = $this->getResourceData($glueResponseTransfer->getIncludedRelationships(), $glueRequestTransfer);
+        $includedData = $this->getResourceData($glueResponseTransfer->getIncludedRelationships(), $glueRequestTransfer);
+        if (!empty($includedData)) {
+            $responseData[static::RESPONSE_INCLUDED] = $includedData;
+        }
 
         return $this->jsonEncoder->encode($responseData);
     }
@@ -128,18 +131,18 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     }
 
     /**
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\RestErrorMessageTransfer> $restErrorMessageTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\GlueErrorTransfer> $glueErrorTransfers
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string
      */
     public function formatErrorResponse(
-        ArrayObject $restErrorMessageTransfers,
+        ArrayObject $glueErrorTransfers,
         GlueRequestTransfer $glueRequestTransfer
     ): string {
         $response = [];
-        foreach ($restErrorMessageTransfers as $restErrorMessageTransfer) {
-            $response[static::RESPONSE_ERRORS][] = $restErrorMessageTransfer->toArray();
+        foreach ($glueErrorTransfers as $glueErrorTransfer) {
+            $response[static::RESPONSE_ERRORS][] = $glueErrorTransfer->toArray();
         }
 
         return $this->jsonEncoder->encode($response);
@@ -152,10 +155,9 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
      */
     protected function buildCollectionLink(GlueRequestTransfer $glueRequestTransfer): array
     {
-        $method = $glueRequestTransfer->getMethod();
         $idResource = $glueRequestTransfer->getResourceOrFail()->getId();
 
-        if ($method === Request::METHOD_GET && $idResource === null) {
+        if ($glueRequestTransfer->getResource()->getMethod() === Request::METHOD_GET && $idResource === null) {
             $linkParts = [];
             $linkParts[] = $glueRequestTransfer->getResourceOrFail()->getType();
             $queryString = $this->buildQueryString($glueRequestTransfer);
@@ -245,9 +247,8 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     protected function isSingleObjectRequest(GlueRequestTransfer $glueRequestTransfer, array $glueResources): bool
     {
         $resourceId = $glueRequestTransfer->getResourceOrFail()->getId();
-        $method = $glueRequestTransfer->getMethod();
 
-        return count($glueResources) === 1 && ($resourceId || $method === Request::METHOD_POST);
+        return count($glueResources) === 1 && ($resourceId || $glueRequestTransfer->getResource()->getMethod() === Request::METHOD_POST);
     }
 
     /**
@@ -267,7 +268,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
 
         return $formattedLinks;
     }
-
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *

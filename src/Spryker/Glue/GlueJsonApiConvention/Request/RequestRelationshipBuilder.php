@@ -24,11 +24,8 @@ class RequestRelationshipBuilder implements RequestBuilderInterface
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
         $queryFields = $glueRequestTransfer->getQueryFields();
-        if (!isset($queryFields[static::QUERY_INCLUDE])) {
+        if (!isset($queryFields[static::QUERY_INCLUDE]) || !$queryFields[static::QUERY_INCLUDE]) {
             return $glueRequestTransfer;
-        }
-        if (!$queryFields[static::QUERY_INCLUDE]) {
-            return $glueRequestTransfer->setExcludeRelationships(true);
         }
 
         return $glueRequestTransfer->setIncludedRelationships(explode(',', trim($queryFields[static::QUERY_INCLUDE])));

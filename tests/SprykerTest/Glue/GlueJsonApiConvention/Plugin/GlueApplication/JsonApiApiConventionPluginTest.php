@@ -11,7 +11,7 @@ use Codeception\Test\Unit;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface;
+use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ApiConventionPluginInterface;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionDependencyProvider;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\JsonApiApiConventionPlugin;
@@ -103,7 +103,7 @@ class JsonApiApiConventionPluginTest extends Unit
         $glueRequestTransfer = $jsonApiApiConventionPlugin->buildRequest($glueRequestTransfer);
 
         //Assert
-        $this->assertTrue($glueRequestTransfer->getExcludeRelationships());
+        $this->assertEmpty($glueRequestTransfer->getIncludedRelationships());
     }
 
     /**
@@ -169,7 +169,7 @@ class JsonApiApiConventionPluginTest extends Unit
     }
 
     /**
-     * @return \Spryker\Glue\GlueApplication\ApiApplication\Type\ApiConventionPluginInterface
+     * @return \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ApiConventionPluginInterface
      */
     protected function createJsonApiApiConventionPlugin(): ApiConventionPluginInterface
     {
@@ -186,14 +186,14 @@ class JsonApiApiConventionPluginTest extends Unit
             ->getMock();
         $firstRequestBuilderPluginInterfaceMock->expects($this->once())
             ->method('build')
-            ->willReturn((new GlueRequestTransfer())->setExcludeRelationships(true));
+            ->willReturn(new GlueRequestTransfer());
 
         $secondRequestBuilderPluginInterfaceMock = $this
             ->getMockBuilder(RequestBuilderPluginInterface::class)
             ->getMock();
         $secondRequestBuilderPluginInterfaceMock->expects($this->once())
             ->method('build')
-            ->willReturn((new GlueRequestTransfer())->setExcludeRelationships(true));
+            ->willReturn(new GlueRequestTransfer());
 
         return [
             $firstRequestBuilderPluginInterfaceMock,
@@ -276,7 +276,7 @@ class JsonApiApiConventionPluginTest extends Unit
             ->getMockBuilder(ResponseFormatterPluginInterface::class)
             ->getMock();
         $responseFormatterPluginInterfaceMock->expects($this->once())
-            ->method('build')
+            ->method('format')
             ->willReturn((new GlueResponseTransfer())->setContent(static::TEST_VALUE));
 
         return [$responseFormatterPluginInterfaceMock];

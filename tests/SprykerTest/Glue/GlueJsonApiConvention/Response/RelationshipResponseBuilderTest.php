@@ -14,8 +14,8 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResourceTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface;
-use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilder;
-use Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface;
+use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilder;
+use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface;
 
 /**
@@ -25,11 +25,11 @@ use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelati
  * @group Glue
  * @group GlueJsonApiConvention
  * @group Response
- * @group JsonGlueRelationshipResponseBuilderTest
+ * @group RelationshipResponseBuilderTest
  *
  * Add your own group annotations below this line
  */
-class JsonGlueRelationshipResponseBuilderTest extends Unit
+class RelationshipResponseBuilderTest extends Unit
 {
     /**
      * @var string
@@ -101,16 +101,16 @@ class JsonGlueRelationshipResponseBuilderTest extends Unit
     /**
      * @param \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface|null $relationshipLoaderMock
      *
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueRelationshipResponseBuilderInterface
+     * @return \Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilderInterface
      */
     protected function createRelationshipResponseBuilder(
         ?ResourceRelationshipLoaderInterface $relationshipLoaderMock = null
-    ): JsonGlueRelationshipResponseBuilderInterface {
+    ): RelationshipResponseBuilderInterface {
         if (!$relationshipLoaderMock) {
             $relationshipLoaderMock = $this->createRelationshipLoaderMock();
         }
 
-        return new JsonGlueRelationshipResponseBuilder($relationshipLoaderMock);
+        return new RelationshipResponseBuilder($relationshipLoaderMock);
     }
 
     /**
