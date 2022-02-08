@@ -22,6 +22,12 @@ use Spryker\Glue\Kernel\AbstractPlugin;
 class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConventionPluginInterface
 {
     /**
+     * {@inheritDoc}
+     * - Extracts meta header from GlueRequestTransfer.
+     * - Checks whether `content-type` header equals JSON:API convention content type.
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return bool
@@ -36,6 +42,11 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
     }
 
     /**
+     * {@inheritDoc}
+     * - Returns JSON API convention name.
+     *
+     * @api
+     *
      * @return string
      */
     public function getName(): string
@@ -44,6 +55,11 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
     }
 
     /**
+     * {@inheritDoc}
+     * - Returns JSON API resource type.
+     *
+     * @api
+     *
      * @return string
      */
     public function getResourceType(): string
@@ -53,6 +69,9 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
 
     /**
      * {@inheritDoc}
+     * - Builds request according to the JSON API Convention.
+     * - Expands `GlueRequestTransfer` with JSON API Convention name.
+     * - Executes a stack of {@link \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestBuilderPluginInterface} plugins.
      *
      * @api
      *
@@ -73,6 +92,8 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
 
     /**
      * {@inheritDoc}
+     * - Executes a stack of {@link \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestValidatorPluginInterface} plugins.
+     * - Plugins are executed until the first one fails, then the failed validation response is returned and subsequent validators are not executed.
      *
      * @api
      *
@@ -95,6 +116,8 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
 
     /**
      * {@inheritDoc}
+     * - Executes a stack of {@link \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestAfterRoutingValidatorPluginInterface} plugins.
+     * - Plugins are executed until the first one fails, then the failed validation response is returned and subsequent validators are not executed.
      *
      * @api
      *
@@ -120,6 +143,7 @@ class JsonApiApiConventionPlugin extends AbstractPlugin implements ApiConvention
 
     /**
      * {@inheritDoc}
+     * - Executes a stack of {@link \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResponseFormatterPluginInterface} plugins.
      *
      * @api
      *

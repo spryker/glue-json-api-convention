@@ -109,7 +109,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         }
 
         $includedData = $this->getResourceData($glueResponseTransfer->getIncludedRelationships(), $glueRequestTransfer);
-        if (!empty($includedData)) {
+        if ($includedData) {
             $responseData[static::RESPONSE_INCLUDED] = $includedData;
         }
 
@@ -268,6 +268,7 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
 
         return $formattedLinks;
     }
+
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *

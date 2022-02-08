@@ -18,6 +18,9 @@ class SparseFieldRequestBuilderPlugin extends AbstractPlugin implements RequestB
 {
     /**
      * {@inheritDoc}
+     * - Extracts `GlueRequestTransfer.fields` from the `GlueRequestTransfer.queryFields`.
+     * - Defines whether `GlueRequestTransfer.fields` exist.
+     * - Expands `GlueRequestTransfer` with `GlueSparseResourceTransfer`.
      *
      * @api
      *

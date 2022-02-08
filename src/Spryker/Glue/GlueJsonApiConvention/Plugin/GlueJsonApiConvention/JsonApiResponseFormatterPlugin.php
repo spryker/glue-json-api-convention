@@ -19,6 +19,10 @@ class JsonApiResponseFormatterPlugin extends AbstractPlugin implements ResponseF
 {
     /**
      * {@inheritDoc}
+     * - Build response for the JSON API convention.
+     * - If `GlueErrorTransfer` exists, returns formatted error response.
+     * - If `GlueResourceTransfer` is empty, returns formatted response with empty resources.
+     * - Extracts sprase fields from `GlueSparseResourceTransfer` if it exists.
      *
      * @api
      *

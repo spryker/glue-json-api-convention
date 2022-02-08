@@ -20,6 +20,7 @@ class RelationshipResponseFormatterPlugin extends AbstractPlugin implements Resp
     /**
      * {@inheritDoc}
      * - Loads resource relationships dependencies and adds included relationships.
+     * - Executes a stack of {@link \Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\ResourceRelationshipPluginInterface} plugins.
      *
      * @api
      *
