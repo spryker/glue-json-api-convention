@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention;
+namespace Spryker\Glue\GlueJsonApiConvention\Plugin\DocumentationGeneratorApi;
 
 use Generated\Shared\Transfer\ApiApplicationSchemaContextTransfer;
 use Spryker\Glue\DocumentationGeneratorApiExtension\Dependency\Plugin\SchemaFormatterPluginInterface;

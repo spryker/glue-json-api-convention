@@ -5,22 +5,21 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention;
+namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestBuilderPluginInterface;
+use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestBuilderPluginInterface;
+use Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig;
 use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class PaginationRequestBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
+class ConventionIdentifierRequestBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
 {
     /**
      * {@inheritDoc}
-     * - Extracts pagination parameters into `GlueRequestTransfer.pagination`.
-     * - Uses `page[offset]` and `page[limit]` query parameter.
-     * - If above parameters are not among the query parameters, does nothing.
+     * - Sets the `GlueRequestTransfer::$convention` to `GlueJsonApiConventionConfig::CONVENTION_JSON_API`.
      *
      * @api
      *
@@ -30,6 +29,6 @@ class PaginationRequestBuilderPlugin extends AbstractPlugin implements RequestBu
      */
     public function build(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
-        return $this->getFactory()->createRequestPaginationParameterBuilder()->extract($glueRequestTransfer);
+        return $glueRequestTransfer->setConvention(GlueJsonApiConventionConfig::CONVENTION_JSON_API);
     }
 }

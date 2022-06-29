@@ -5,22 +5,21 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention;
+namespace Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
-use Spryker\Glue\GlueJsonApiConventionExtension\Dependency\Plugin\RequestBuilderPluginInterface;
+use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestBuilderPluginInterface;
 use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
  * @method \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionFactory getFactory()
  */
-class SparseFieldRequestBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
+class AttributesRequestBuilderPlugin extends AbstractPlugin implements RequestBuilderPluginInterface
 {
     /**
      * {@inheritDoc}
-     * - Extracts `fields` parameters from the `GlueRequestTransfer.queryFields`.
-     * - Expects the fields to be a nested array parameter with key being the resource type and values - attribute names.
-     * - Expands `GlueRequestTransfer` with `GlueSparseResourceTransfer`.
+     * - Sets `GlueRequestTransfer.attributes` in case the request has content.
+     * - Ignores content if the content structure does not follow JSON API (`data.attributes`).
      *
      * @api
      *
@@ -30,6 +29,6 @@ class SparseFieldRequestBuilderPlugin extends AbstractPlugin implements RequestB
      */
     public function build(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
-        return $this->getFactory()->createRequestSparseFieldBuilder()->extract($glueRequestTransfer);
+        return $this->getFactory()->createAttributesRequestBuilder()->extract($glueRequestTransfer);
     }
 }
