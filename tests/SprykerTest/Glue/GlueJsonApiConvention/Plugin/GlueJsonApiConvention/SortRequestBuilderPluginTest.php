@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerTest\Glue\GlueJsonApiConvention\Plugin\GlueRestApiConvention;
+namespace SprykerTest\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\SortTransfer;
@@ -18,7 +18,7 @@ use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\SortRequestBuilder
  * @group Glue
  * @group GlueJsonApiConvention
  * @group Plugin
- * @group GlueRestApiConvention
+ * @group GlueJsonApiConvention
  * @group SortRequestBuilderPluginTest
  * Add your own group annotations below this line
  */

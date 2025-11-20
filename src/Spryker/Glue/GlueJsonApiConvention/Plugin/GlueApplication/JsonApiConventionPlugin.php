@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class JsonApiConventionPlugin extends AbstractPlugin implements ConventionPluginInterface
 {
+    protected const CONTENT_TYPE_REGULAR_EXPRESSION = '/^application\/vnd\.api\+json(?=;|$)/i';
+
     /**
      * @var string
      */
@@ -129,11 +131,12 @@ class JsonApiConventionPlugin extends AbstractPlugin implements ConventionPlugin
     protected function isApplicableByAcceptHeader(GlueRequestTransfer $glueRequestTransfer): bool
     {
         $meta = $glueRequestTransfer->getMeta();
+        if (!isset($meta[static::HEADER_ACCEPT][0])) {
+            return false;
+        }
 
         if (
-            array_key_exists(static::HEADER_ACCEPT, $meta)
-            && isset($meta[static::HEADER_ACCEPT][0])
-            && $meta[static::HEADER_ACCEPT][0] === GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE
+            $this->isValidJsonHeader((string)$meta[static::HEADER_ACCEPT][0])
             && $glueRequestTransfer->getMethodOrFail() === Request::METHOD_GET
         ) {
             return true;
@@ -150,15 +153,22 @@ class JsonApiConventionPlugin extends AbstractPlugin implements ConventionPlugin
     protected function isApplicableByContentTypeHeader(GlueRequestTransfer $glueRequestTransfer): bool
     {
         $meta = $glueRequestTransfer->getMeta();
+        if (!isset($meta[static::HEADER_CONTENT_TYPE][0])) {
+            return false;
+        }
 
-        if (
-            array_key_exists(static::HEADER_CONTENT_TYPE, $meta)
-            && isset($meta[static::HEADER_CONTENT_TYPE][0])
-            && $meta[static::HEADER_CONTENT_TYPE][0] === GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE
-        ) {
+        if ($this->isValidJsonHeader((string)$meta[static::HEADER_CONTENT_TYPE][0])) {
             return true;
         }
 
         return false;
+    }
+
+    protected function isValidJsonHeader(string $contentType): bool
+    {
+        $contentTypeParts = [];
+        preg_match(static::CONTENT_TYPE_REGULAR_EXPRESSION, $contentType, $contentTypeParts);
+
+        return ($contentTypeParts[0] ?? '') === GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE;
     }
 }

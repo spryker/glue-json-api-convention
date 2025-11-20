@@ -52,18 +52,21 @@ class JsonApiApiConventionPluginTest extends Unit
      */
     protected const HEADER_CONTENT_TYPE = 'content-type';
 
+    protected const HEADER_ACCEPT = 'accept';
+
     /**
      * @var string
      */
     protected const CONTENT_TYPE = 'application/json';
 
     /**
-     * @return void
+     * @dataProvider contentTypeDataProvider
      */
-    public function testJsonApiApiConventionPluginIsApplicableByContentTypeHeader(): void
+    public function testJsonApiApiConventionPluginIsApplicableByContentTypeHeader(string $contentType): void
     {
         //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransfer();
+        $glueRequestTransfer->setMeta([static::HEADER_CONTENT_TYPE => [$contentType]]);
 
         // Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
@@ -91,12 +94,13 @@ class JsonApiApiConventionPluginTest extends Unit
     }
 
     /**
-     * @return void
+     * @dataProvider contentTypeDataProvider
      */
-    public function testJsonApiApiConventionPluginIsApplicableByAcceptHeader(): void
+    public function testJsonApiApiConventionPluginIsApplicableByAcceptHeader(string $contentType): void
     {
         //Arrange
         $glueRequestTransfer = $this->tester->createGlueRequestTransferWithAcceptHeader();
+        $glueRequestTransfer->setMeta([static::HEADER_ACCEPT => [$contentType]]);
 
         // Act
         $jsonApiApiConventionPlugin = $this->createJsonApiApiConventionPlugin();
@@ -327,5 +331,32 @@ class JsonApiApiConventionPluginTest extends Unit
             ->willReturn((new GlueResponseTransfer())->setContent(static::TEST_VALUE));
 
         return [$responseFormatterPluginInterfaceMock];
+    }
+
+    public function contentTypeDataProvider(): array
+    {
+        return [
+            'basic content type' => [
+                'contentType' => 'application/vnd.api+json;',
+            ],
+            'basic content type with version' => [
+                'contentType' => 'application/vnd.api+json; version=1.1',
+            ],
+            'content type without version' => [
+                'contentType' => 'application/vnd.api+json',
+            ],
+            'content type with charset' => [
+                'contentType' => 'application/vnd.api+json; charset=utf-8',
+            ],
+            'content type with charset and version' => [
+                'contentType' => 'application/vnd.api+json; charset=utf-8; version=2.0',
+            ],
+            'content type with version and charset' => [
+                'contentType' => 'application/vnd.api+json; version=1.5; charset=utf-8',
+            ],
+            'content type with multiple parameters' => [
+                'contentType' => 'application/vnd.api+json; charset=utf-8; version=3.14; boundary=something',
+            ],
+        ];
     }
 }

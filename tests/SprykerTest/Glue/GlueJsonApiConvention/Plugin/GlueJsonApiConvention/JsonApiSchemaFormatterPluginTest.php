@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace SprykerTest\Glue\GlueJsonApiConvention\Plugin\GlueRestApiConvention;
+namespace SprykerTest\Glue\GlueJsonApiConvention\Plugin\GlueJsonApiConvention;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\AnnotationTransfer;
@@ -22,7 +22,7 @@ use SprykerTest\Glue\GlueJsonApiConvention\Stub\TestEmptyJsonApiResourcePlugin;
  * @group Glue
  * @group GlueJsonApiConvention
  * @group Plugin
- * @group GlueRestApiConvention
+ * @group GlueJsonApiConvention
  * @group JsonApiSchemaFormatterPluginTest
  * Add your own group annotations below this line
  */
