@@ -119,7 +119,6 @@ class RelationshipResponseBuilderTest extends Unit
     protected function createRelationshipLoaderMock(): ResourceRelationshipLoaderInterface
     {
         return $this->getMockBuilder(ResourceRelationshipLoaderInterface::class)
-            ->addMethods(['isApplicable'])
             ->onlyMethods(['load'])
             ->getMock();
     }
