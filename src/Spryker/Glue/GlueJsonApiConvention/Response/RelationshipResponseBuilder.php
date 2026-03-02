@@ -24,20 +24,11 @@ class RelationshipResponseBuilder implements RelationshipResponseBuilderInterfac
      */
     protected $alreadyLoadedResources = [];
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface $resourceRelationshipProviderLoader
-     */
     public function __construct(ResourceRelationshipLoaderInterface $resourceRelationshipProviderLoader)
     {
         $this->resourceRelationshipProviderLoader = $resourceRelationshipProviderLoader;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     public function buildResponse(GlueResponseTransfer $glueResponseTransfer, GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
         if (!isset($glueResponseTransfer->getResources()[0])) {
@@ -97,12 +88,6 @@ class RelationshipResponseBuilder implements RelationshipResponseBuilderInterfac
         }
     }
 
-    /**
-     * @param string $resourceType
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return bool
-     */
     protected function hasRelationship(string $resourceType, GlueRequestTransfer $glueRequestTransfer): bool
     {
         if ($resourceType === $glueRequestTransfer->getResourceOrFail()->getType()) {
@@ -199,12 +184,6 @@ class RelationshipResponseBuilder implements RelationshipResponseBuilderInterfac
         return $resource->getRelationships()->count() === 0;
     }
 
-    /**
-     * @param string $resourceType
-     * @param string|null $parentResourceId
-     *
-     * @return bool
-     */
     protected function canLoadResource(string $resourceType, ?string $parentResourceId = null): bool
     {
         return !isset($this->alreadyLoadedResources[$resourceType . $parentResourceId]);

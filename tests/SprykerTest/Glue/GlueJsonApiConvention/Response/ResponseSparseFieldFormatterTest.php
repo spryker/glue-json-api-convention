@@ -23,9 +23,6 @@ use Spryker\Glue\GlueJsonApiConvention\Response\ResponseSparseFieldFormatter;
  */
 class ResponseSparseFieldFormatterTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testSparseFieldsFormatterForCollection(): void
     {
         //Arrange
@@ -86,9 +83,6 @@ class ResponseSparseFieldFormatterTest extends Unit
         $this->assertArrayNotHasKey('iso2_code', $result['included'][1]['attributes']);
     }
 
-    /**
-     * @return void
-     */
     public function testSparseFieldsFormatterForSingleResource(): void
     {
         //Arrange

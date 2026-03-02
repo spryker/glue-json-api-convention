@@ -34,9 +34,6 @@ class FilterFieldRequestBuilderPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testFilterFieldRequestBuilderPlugin(): void
     {
         //Arrange

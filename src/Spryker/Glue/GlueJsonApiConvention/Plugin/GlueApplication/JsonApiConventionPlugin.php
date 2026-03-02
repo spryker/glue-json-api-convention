@@ -123,11 +123,6 @@ class JsonApiConventionPlugin extends AbstractPlugin implements ConventionPlugin
         return $this->getFactory()->getResponseFormatterPlugins();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return bool
-     */
     protected function isApplicableByAcceptHeader(GlueRequestTransfer $glueRequestTransfer): bool
     {
         $meta = $glueRequestTransfer->getMeta();
@@ -145,11 +140,6 @@ class JsonApiConventionPlugin extends AbstractPlugin implements ConventionPlugin
         return false;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return bool
-     */
     protected function isApplicableByContentTypeHeader(GlueRequestTransfer $glueRequestTransfer): bool
     {
         $meta = $glueRequestTransfer->getMeta();

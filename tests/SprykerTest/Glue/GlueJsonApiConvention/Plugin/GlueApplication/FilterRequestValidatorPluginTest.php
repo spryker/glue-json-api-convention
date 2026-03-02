@@ -36,9 +36,6 @@ class FilterRequestValidatorPluginTest extends Unit
      */
     protected const TEST_VALUE = 'TEST_VALUE';
 
-    /**
-     * @return void
-     */
     public function testFilterRequestValidatorPluginContainsValidRequestFilterData(): void
     {
         //Arrange
@@ -52,9 +49,6 @@ class FilterRequestValidatorPluginTest extends Unit
         $this->assertTrue($glueRequestValidationTransfer->getIsValid());
     }
 
-    /**
-     * @return void
-     */
     public function testFilterRequestValidatorPluginNotContainsRequestFilterData(): void
     {
         //Act
@@ -68,9 +62,6 @@ class FilterRequestValidatorPluginTest extends Unit
         $this->assertTrue($glueRequestValidationTransfer->getIsValid());
     }
 
-    /**
-     * @return void
-     */
     public function testFilterRequestValidatorPluginContainsInvalidRequestFilterData(): void
     {
         //Act
@@ -84,17 +75,11 @@ class FilterRequestValidatorPluginTest extends Unit
         $this->assertFalse($glueRequestValidationTransfer->getIsValid());
     }
 
-    /**
-     * @return \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestValidatorPluginInterface
-     */
     protected function createFilterRequestValidatorPlugin(): RequestValidatorPluginInterface
     {
         return new FilterRequestValidatorPlugin();
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     protected function createGlueRequestTransfer(): GlueRequestTransfer
     {
         return new GlueRequestTransfer();

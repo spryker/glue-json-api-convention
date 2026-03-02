@@ -9,10 +9,5 @@ namespace Spryker\Glue\GlueJsonApiConvention\Dependency\External;
 
 interface GlueJsonApiConventionToInflectorInterface
 {
-    /**
-     * @param string $word
-     *
-     * @return string
-     */
     public function singularize(string $word): string;
 }

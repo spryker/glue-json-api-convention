@@ -16,9 +16,6 @@ class JsonDecoder implements DecoderInterface
      */
     protected $utilEncodingService;
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(GlueJsonApiConventionToUtilEncodingServiceInterface $utilEncodingService)
     {
         $this->utilEncodingService = $utilEncodingService;

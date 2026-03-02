@@ -65,11 +65,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
      */
     public const INFLECTOR = 'INFLECTOR';
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     public function provideDependencies(Container $container): Container
     {
         $container = parent::provideDependencies($container);
@@ -84,11 +79,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addUtilEncodingService(Container $container): Container
     {
         $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container) {
@@ -98,11 +88,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addRequestBuilderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_REQUEST_BUILDER, function () {
@@ -112,11 +97,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addRequestValidatorPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_REQUEST_VALIDATOR, function () {
@@ -126,11 +106,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addRequestAfterRoutingValidatorPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_REQUEST_AFTER_ROUTING_VALIDATOR, function () {
@@ -140,11 +115,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addResponseFormatterPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_RESPONSE_FORMATTER, function () {
@@ -154,11 +124,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addRelationshipProviderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_RELATIONSHIP_PROVIDER, function (Container $container) {
@@ -168,11 +133,6 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
         return $container;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Container $container
-     *
-     * @return \Spryker\Glue\Kernel\Container
-     */
     protected function addInflector(Container $container): Container
     {
         $container->set(static::INFLECTOR, function () {

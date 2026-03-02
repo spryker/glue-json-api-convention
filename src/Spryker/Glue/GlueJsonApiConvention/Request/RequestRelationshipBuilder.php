@@ -16,11 +16,6 @@ class RequestRelationshipBuilder implements RequestBuilderInterface
      */
     protected const QUERY_INCLUDE = 'include';
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
         $queryFields = $glueRequestTransfer->getQueryFields();

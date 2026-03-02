@@ -46,9 +46,6 @@ class JsonApiResponseBuilderTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testBuildResponseData(): void
     {
         //Act
@@ -71,9 +68,6 @@ class JsonApiResponseBuilderTest extends Unit
         $this->assertSame('1', $decodedContent['data']['id']);
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingService(): GlueJsonApiConventionToUtilEncodingServiceInterface
     {
         return new GlueJsonApiConventionToUtilEncodingServiceBridge(
@@ -81,33 +75,21 @@ class JsonApiResponseBuilderTest extends Unit
         );
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface
-     */
     protected function createJsonEncoder(): EncoderInterface
     {
         return new JsonEncoder($this->getUtilEncodingService());
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface
-     */
     protected function createJsonGlueResponseFormatter(): JsonGlueResponseFormatterInterface
     {
         return new JsonGlueResponseFormatter($this->createJsonEncoder(), $this->getJsonApiConventionConfigMock(), $this->createResponseSparseFieldFormatter());
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\ResponseSparseFieldFormatterInterface
-     */
     protected function createResponseSparseFieldFormatter(): ResponseSparseFieldFormatterInterface
     {
         return new ResponseSparseFieldFormatter();
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     protected function getGlueRequestTransfer(): GlueRequestTransfer
     {
         $includedRelationships = [];
@@ -120,9 +102,6 @@ class JsonApiResponseBuilderTest extends Unit
                 ->setId('1'));
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     protected function getGlueResponseTransfer(): GlueResponseTransfer
     {
         $links = new ArrayObject();

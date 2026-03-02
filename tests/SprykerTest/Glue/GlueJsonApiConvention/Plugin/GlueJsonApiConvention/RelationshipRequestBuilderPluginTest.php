@@ -28,9 +28,6 @@ class RelationshipRequestBuilderPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testRelationshipRequestBuilderPlugin(): void
     {
         //Arrange

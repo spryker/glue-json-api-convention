@@ -28,9 +28,6 @@ class SparseFieldRequestBuilderPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testSparseFieldRequestBuilderPlugin(): void
     {
         //Arrange

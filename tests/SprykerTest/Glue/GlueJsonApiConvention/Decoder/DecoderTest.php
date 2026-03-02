@@ -29,9 +29,6 @@ class DecoderTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testEmptyStringJsonDecoder(): void
     {
         //Act
@@ -43,9 +40,6 @@ class DecoderTest extends Unit
         $this->assertEmpty($result);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonDecoder(): void
     {
         //Act
@@ -56,9 +50,6 @@ class DecoderTest extends Unit
         $this->assertEquals(json_decode($this->acceptedTypesForDecode(), true), $result);
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingService(): GlueJsonApiConventionToUtilEncodingServiceInterface
     {
         return new GlueJsonApiConventionToUtilEncodingServiceBridge(
@@ -66,9 +57,6 @@ class DecoderTest extends Unit
         );
     }
 
-    /**
-     * @return string
-     */
     protected function acceptedTypesForDecode(): string
     {
         return json_encode([

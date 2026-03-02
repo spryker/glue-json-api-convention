@@ -29,9 +29,6 @@ class EncoderTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testJsonEncodeTestData(): void
     {
         //Act
@@ -43,9 +40,6 @@ class EncoderTest extends Unit
         $this->assertEquals(json_encode($this->acceptedTypesForEncode()), $result);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonEncodeEmptyData(): void
     {
         //Act
@@ -57,9 +51,6 @@ class EncoderTest extends Unit
         $this->assertIsString($result);
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingService(): GlueJsonApiConventionToUtilEncodingServiceInterface
     {
         return new GlueJsonApiConventionToUtilEncodingServiceBridge(
@@ -67,9 +58,6 @@ class EncoderTest extends Unit
         );
     }
 
-    /**
-     * @return array
-     */
     protected function acceptedTypesForEncode(): array
     {
         return [

@@ -27,11 +27,6 @@ class RequestPaginationParameterBuilder implements RequestBuilderInterface
      */
     protected const PAGINATION_LIMIT = 'limit';
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
         $queryParameters = $glueRequestTransfer->getQueryFields();

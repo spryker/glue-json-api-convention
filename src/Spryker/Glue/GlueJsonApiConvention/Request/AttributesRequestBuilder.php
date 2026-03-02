@@ -17,19 +17,11 @@ class AttributesRequestBuilder implements RequestBuilderInterface
      */
     protected DecoderInterface $decoder;
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface $decoder
-     */
     public function __construct(DecoderInterface $decoder)
     {
         $this->decoder = $decoder;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
         if (!$glueRequestTransfer->getContent()) {

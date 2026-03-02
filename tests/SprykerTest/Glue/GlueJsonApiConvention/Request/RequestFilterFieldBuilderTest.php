@@ -29,9 +29,6 @@ class RequestFilterFieldBuilderTest extends Unit
      */
     protected const QUERY_FILTER = 'filter';
 
-    /**
-     * @return void
-     */
     public function testEmptyFilter(): void
     {
         //Act
@@ -41,9 +38,6 @@ class RequestFilterFieldBuilderTest extends Unit
         $this->assertCount(0, $glueRequestTransfer->getFilters());
     }
 
-    /**
-     * @return void
-     */
     public function testExtractReturnsGlueFilterTransfer(): void
     {
         //Act
@@ -57,11 +51,6 @@ class RequestFilterFieldBuilderTest extends Unit
         $this->assertSame('items', $glueRequestTransfer->getFilters()->offsetGet(0)->getResource());
     }
 
-    /**
-     * @param array $filter
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     protected function buildRequest(array $filter = []): GlueRequestTransfer
     {
         //Arrange

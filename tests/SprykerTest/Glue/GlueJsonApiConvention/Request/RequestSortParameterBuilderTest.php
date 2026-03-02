@@ -44,9 +44,6 @@ class RequestSortParameterBuilderTest extends Unit
      */
     protected const QUERY_SORT = 'sort';
 
-    /**
-     * @return void
-     */
     public function testEmptySorting(): void
     {
         //Act
@@ -56,9 +53,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->assertCount(0, $glueRequestTransfer->getSortings());
     }
 
-    /**
-     * @return void
-     */
     public function testAscendingSortField(): void
     {
         //Act
@@ -69,9 +63,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->assertTrue($glueRequestTransfer->getSortings()->offsetGet(0)->getIsAscending());
     }
 
-    /**
-     * @return void
-     */
     public function testDescendingSortField(): void
     {
         //Act
@@ -82,9 +73,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->assertFalse($glueRequestTransfer->getSortings()->offsetGet(0)->getIsAscending());
     }
 
-    /**
-     * @return void
-     */
     public function testMultipleAscendingSortingFields(): void
     {
         //Act
@@ -96,9 +84,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->assertTrue($glueRequestTransfer->getSortings()->offsetGet(0)->getIsAscending());
     }
 
-    /**
-     * @return void
-     */
     public function testMultipleDescendingSortingFields(): void
     {
         //Act
@@ -110,9 +95,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->assertFalse($glueRequestTransfer->getSortings()->offsetGet(0)->getIsAscending());
     }
 
-    /**
-     * @return void
-     */
     public function testMultipleSortingFieldsWithDifferentDirections(): void
     {
         //Act
@@ -123,11 +105,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->secondSortingAsserts($glueRequestTransfer);
     }
 
-    /**
-     * @param array $sorting
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     protected function buildRequest(array $sorting = []): GlueRequestTransfer
     {
         //Arrange
@@ -140,12 +117,6 @@ class RequestSortParameterBuilderTest extends Unit
         return $builder->extract($glueRequest);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param int $expectedCount
-     *
-     * @return void
-     */
     protected function firstSortingAsserts(GlueRequestTransfer $glueRequestTransfer, int $expectedCount): void
     {
         $sorting = $glueRequestTransfer->getSortings();
@@ -155,11 +126,6 @@ class RequestSortParameterBuilderTest extends Unit
         $this->assertSame(static::FIRST_FIELD_NAME, $firstSorting->getField());
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return void
-     */
     protected function secondSortingAsserts(GlueRequestTransfer $glueRequestTransfer): void
     {
         $secondSorting = $glueRequestTransfer->getSortings()->offsetGet(1);

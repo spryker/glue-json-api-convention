@@ -47,9 +47,6 @@ class AttributesRequestBuilderTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testAttributesRequestBuilderWithoutContent(): void
     {
         //Arrange
@@ -62,9 +59,6 @@ class AttributesRequestBuilderTest extends Unit
         $this->assertEmpty($glueRequestTransfer->getAttributes());
     }
 
-    /**
-     * @return void
-     */
     public function testAttributesRequestBuilderWithWrongContentData(): void
     {
         //Arrange
@@ -77,9 +71,6 @@ class AttributesRequestBuilderTest extends Unit
         $this->assertEmpty($glueRequestTransfer->getAttributes());
     }
 
-    /**
-     * @return void
-     */
     public function testAttributesRequestBuilderWithContentData(): void
     {
         //Arrange
@@ -108,17 +99,11 @@ class AttributesRequestBuilderTest extends Unit
         return $attributesRequestBuilder->extract($glueRequestTransfer);
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Decoder\DecoderInterface
-     */
     protected function createJsonDecoder(): DecoderInterface
     {
         return new JsonDecoder($this->createUtilEncodingService());
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface
-     */
     protected function createUtilEncodingService(): GlueJsonApiConventionToUtilEncodingServiceInterface
     {
         return new GlueJsonApiConventionToUtilEncodingServiceBridge(
@@ -126,9 +111,6 @@ class AttributesRequestBuilderTest extends Unit
         );
     }
 
-    /**
-     * @return string
-     */
     protected function getWrongContentData(): string
     {
         return json_encode([
@@ -137,9 +119,6 @@ class AttributesRequestBuilderTest extends Unit
         ]);
     }
 
-    /**
-     * @return string
-     */
     protected function getContentData(): string
     {
         return json_encode([

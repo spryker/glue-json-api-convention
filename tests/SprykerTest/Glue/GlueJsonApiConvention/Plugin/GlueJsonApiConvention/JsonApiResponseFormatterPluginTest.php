@@ -28,9 +28,6 @@ class JsonApiResponseFormatterPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testJsonApiResponseFormatterPlugin(): void
     {
         //Arrange

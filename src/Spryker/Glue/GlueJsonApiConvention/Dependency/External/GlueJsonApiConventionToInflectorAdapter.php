@@ -11,11 +11,6 @@ use Doctrine\Inflector\InflectorFactory;
 
 class GlueJsonApiConventionToInflectorAdapter implements GlueJsonApiConventionToInflectorInterface
 {
-    /**
-     * @param string $word
-     *
-     * @return string
-     */
     public function singularize(string $word): string
     {
         $inflector = InflectorFactory::create()->build();

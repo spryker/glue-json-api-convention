@@ -28,9 +28,6 @@ class JsonApiSchemaParametersFormatterTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testSetOperationParametersWithEmptyOperation(): void
     {
         //Arrange
@@ -90,9 +87,6 @@ class JsonApiSchemaParametersFormatterTest extends Unit
         $this->assertEquals(7, count($operation['parameters']));
     }
 
-    /**
-     * @return void
-     */
     public function testSetComponentParameters(): void
     {
         //Arrange

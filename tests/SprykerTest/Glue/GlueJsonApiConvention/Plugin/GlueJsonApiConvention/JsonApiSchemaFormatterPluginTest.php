@@ -58,9 +58,6 @@ class JsonApiSchemaFormatterPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testFormatThenCompareArrayStructure(): void
     {
         //Arrange

@@ -20,20 +20,11 @@ class JsonApiResponseBuilder implements JsonApiResponseBuilderInterface
      */
     protected $jsonGlueResponseFormatter;
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Response\JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter
-     */
     public function __construct(JsonGlueResponseFormatterInterface $jsonGlueResponseFormatter)
     {
         $this->jsonGlueResponseFormatter = $jsonGlueResponseFormatter;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueResponseTransfer $glueResponseTransfer
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     public function buildResponse(
         GlueResponseTransfer $glueResponseTransfer,
         GlueRequestTransfer $glueRequestTransfer
@@ -89,11 +80,6 @@ class JsonApiResponseBuilder implements JsonApiResponseBuilderInterface
         return $sparseFields;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return int
-     */
     protected function getStatusCode(GlueRequestTransfer $glueRequestTransfer): int
     {
         switch ($glueRequestTransfer->getMethod()) {

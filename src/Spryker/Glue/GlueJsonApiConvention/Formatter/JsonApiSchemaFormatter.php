@@ -88,10 +88,6 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
      */
     protected $jsonApiSchemaParametersFormatter;
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Dependency\External\GlueJsonApiConventionToInflectorInterface $inflector
-     * @param \Spryker\Glue\GlueJsonApiConvention\Formatter\JsonApiSchemaParametersFormatterInterface $jsonApiSchemaParametersFormatter
-     */
     public function __construct(
         GlueJsonApiConventionToInflectorInterface $inflector,
         JsonApiSchemaParametersFormatterInterface $jsonApiSchemaParametersFormatter
@@ -266,11 +262,6 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
         return $formattedData;
     }
 
-    /**
-     * @param string $resourceType
-     *
-     * @return string
-     */
     protected function getPathFromResourceType(string $resourceType): string
     {
         $resourceTypeExploded = explode('-', $resourceType);
@@ -296,23 +287,11 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
         ];
     }
 
-    /**
-     * @param string $resourceType
-     *
-     * @return string
-     */
     protected function getCollectionResourcePath(string $resourceType): string
     {
         return sprintf('/%s', $resourceType);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PathAnnotationTransfer $pathAnnotationTransfer
-     * @param string $methodName
-     * @param bool $isCollection
-     *
-     * @return string
-     */
     protected function getResponseAttributesClassName(
         PathAnnotationTransfer $pathAnnotationTransfer,
         string $methodName,
@@ -329,13 +308,6 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
         return $responseAttributesClassName;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PathAnnotationTransfer $pathAnnotationTransfer
-     * @param string $methodName
-     * @param bool $isCollection
-     *
-     * @return \Generated\Shared\Transfer\AnnotationTransfer
-     */
     protected function resolveAnnotationTransfer(
         PathAnnotationTransfer $pathAnnotationTransfer,
         string $methodName,
@@ -353,11 +325,6 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
         return $pathAnnotationTransfer->$annotationPropertyName();
     }
 
-    /**
-     * @param string $transferClassName
-     *
-     * @return string
-     */
     protected function getResponseAttributesName(string $transferClassName): string
     {
         return str_replace(
@@ -367,11 +334,6 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
         );
     }
 
-    /**
-     * @param string $transferClassName
-     *
-     * @return string
-     */
     protected function getTransferClassNamePartial(string $transferClassName): string
     {
         $transferClassNameExploded = explode('\\', $transferClassName);

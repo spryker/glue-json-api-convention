@@ -76,9 +76,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertTrue($isApplicable);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginIsNotApplicableByContentTypeHeader(): void
     {
         //Arrange
@@ -110,9 +107,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertTrue($isApplicable);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginIsNotApplicableByAcceptHeader(): void
     {
         // Arrange
@@ -126,9 +120,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertFalse($isApplicable);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginGetName(): void
     {
         // Act
@@ -139,9 +130,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertSame(GlueJsonApiConventionConfig::CONVENTION_JSON_API, $jsonApiApiConventionName);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginGetResourceType(): void
     {
         // Act
@@ -152,9 +140,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertSame(JsonApiResourceInterface::class, $jsonApiApiConventionResourceType);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginBuildRequest(): void
     {
         //Arrange
@@ -171,9 +156,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertEquals($this->createArrayOfRequestBuilderPluginMock(), $actualRequestBuilderPlugins);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginValidateRequest(): void
     {
         //Arrange
@@ -190,9 +172,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertEquals($this->createArrayOfRequestValidatorPluginMock(), $actualRequestValidatorPlugins);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginValidateRequestAfterRouting(): void
     {
         //Arrange
@@ -209,9 +188,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertEquals($this->createArrayOfRequestAfterRoutingValidatorPluginInterfaceMock(), $actualRequestAfterRoutingValidatorPlugins);
     }
 
-    /**
-     * @return void
-     */
     public function testJsonApiApiConventionPluginFormatResponse(): void
     {
         //Arrange
@@ -228,9 +204,6 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertEquals($this->createArrayOfResponseFormatterPluginInterfaceMock(), $actualResponseFormatterPlugins);
     }
 
-    /**
-     * @return \Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ConventionPluginInterface
-     */
     protected function createJsonApiApiConventionPlugin(): ConventionPluginInterface
     {
         return new JsonApiConventionPlugin();

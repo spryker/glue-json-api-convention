@@ -29,9 +29,6 @@ class PaginationRequestBuilderPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testPaginationRequestBuilderPlugin(): void
     {
         //Arrange

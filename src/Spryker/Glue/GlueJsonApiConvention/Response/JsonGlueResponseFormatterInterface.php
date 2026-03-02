@@ -26,11 +26,6 @@ interface JsonGlueResponseFormatterInterface
         GlueRequestTransfer $glueRequestTransfer
     ): string;
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return string
-     */
     public function formatResponseWithEmptyResource(GlueRequestTransfer $glueRequestTransfer): string;
 
     /**

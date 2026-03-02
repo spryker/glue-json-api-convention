@@ -41,9 +41,6 @@ class RelationshipResponseBuilderTest extends Unit
      */
     protected const FAKE_RELATIONSHIP_RESOURCE_NAME = 'relationshipResource';
 
-    /**
-     * @return void
-     */
     public function testLoadRelationshipsShouldIncludeRelationsByPluginAndIncludedRelationships(): void
     {
         //arrange
@@ -98,11 +95,6 @@ class RelationshipResponseBuilderTest extends Unit
         $this->assertSame(static::FAKE_RELATIONSHIP_RESOURCE_NAME, $included[0]->getType());
     }
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Resource\ResourceRelationshipLoaderInterface|null $relationshipLoaderMock
-     *
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilderInterface
-     */
     protected function createRelationshipResponseBuilder(
         ?ResourceRelationshipLoaderInterface $relationshipLoaderMock = null
     ): RelationshipResponseBuilderInterface {
@@ -133,12 +125,6 @@ class RelationshipResponseBuilderTest extends Unit
             ->getMock();
     }
 
-    /**
-     * @param string $type
-     * @param int $id
-     *
-     * @return \Generated\Shared\Transfer\GlueResourceTransfer
-     */
     protected function createResource(string $type, int $id): GlueResourceTransfer
     {
         return (new GlueResourceTransfer())

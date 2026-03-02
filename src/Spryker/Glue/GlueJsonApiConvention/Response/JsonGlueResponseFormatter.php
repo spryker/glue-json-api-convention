@@ -81,11 +81,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
      */
     protected $responseSparseFieldFormatter;
 
-    /**
-     * @param \Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface $jsonEncoder
-     * @param \Spryker\Glue\GlueJsonApiConvention\GlueJsonApiConventionConfig $jsonApiConventionConfig
-     * @param \Spryker\Glue\GlueJsonApiConvention\Response\ResponseSparseFieldFormatterInterface $responseSparseFieldFormatter
-     */
     public function __construct(
         EncoderInterface $jsonEncoder,
         GlueJsonApiConventionConfig $jsonApiConventionConfig,
@@ -135,11 +130,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         return $this->jsonEncoder->encode($responseData);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return string
-     */
     public function formatResponseWithEmptyResource(GlueRequestTransfer $glueRequestTransfer): string
     {
         $responseData = [];
@@ -297,11 +287,6 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         return $formattedLinks;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return string
-     */
     protected function buildQueryString(GlueRequestTransfer $glueRequestTransfer): string
     {
         $queryFields = $glueRequestTransfer->getQueryFields();

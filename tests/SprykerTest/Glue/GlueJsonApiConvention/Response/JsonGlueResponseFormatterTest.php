@@ -44,9 +44,6 @@ class JsonGlueResponseFormatterTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testFormatResponseData(): void
     {
         //Act
@@ -72,9 +69,6 @@ class JsonGlueResponseFormatterTest extends Unit
         $this->assertArrayHasKey('id', $decodedData['data'][0]);
     }
 
-    /**
-     * @return void
-     */
     public function testFormatResponseDataWithExcludeRelationships(): void
     {
         //Act
@@ -98,17 +92,11 @@ class JsonGlueResponseFormatterTest extends Unit
         $this->assertSame('1', $decodedData['data'][0]['id']);
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Response\ResponseSparseFieldFormatterInterface
-     */
     protected function createResponseSparseFieldFormatter(): ResponseSparseFieldFormatterInterface
     {
         return new ResponseSparseFieldFormatter();
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceInterface
-     */
     protected function getUtilEncodingService(): GlueJsonApiConventionToUtilEncodingServiceInterface
     {
         return new GlueJsonApiConventionToUtilEncodingServiceBridge(
@@ -116,17 +104,11 @@ class JsonGlueResponseFormatterTest extends Unit
         );
     }
 
-    /**
-     * @return \Spryker\Glue\GlueJsonApiConvention\Encoder\EncoderInterface
-     */
     protected function createJsonEncoder(): EncoderInterface
     {
         return new JsonEncoder($this->getUtilEncodingService());
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     protected function getGlueResourcesTestData(): GlueResponseTransfer
     {
         $links = new ArrayObject();
@@ -143,9 +125,6 @@ class JsonGlueResponseFormatterTest extends Unit
         return $glueResponseTransfer;
     }
 
-    /**
-     * @return array
-     */
     protected function getSparseFieldsTestData(): array
     {
         return [

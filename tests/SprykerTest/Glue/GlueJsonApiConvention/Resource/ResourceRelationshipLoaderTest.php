@@ -32,9 +32,6 @@ class ResourceRelationshipLoaderTest extends Unit
      */
     protected const FAKE_RESOURCE_NAME = 'Foo';
 
-    /**
-     * @return void
-     */
     public function testLoadWithTwoApplicablePluginsShouldReturnRelationshipsForBoth(): void
     {
         //arrange
@@ -51,9 +48,6 @@ class ResourceRelationshipLoaderTest extends Unit
         $this->assertCount(2, $loadedResourceRelationships);
     }
 
-    /**
-     * @return void
-     */
     public function testLoadWithTwoPluginsShouldReturnRelationshipsOnlyForApplicable(): void
     {
         //arrange
@@ -71,9 +65,6 @@ class ResourceRelationshipLoaderTest extends Unit
         $this->assertCount(2, $loadedResourceRelationships);
     }
 
-    /**
-     * @return void
-     */
     public function testLoadWithNonapplicablePluginsShouldReturnEmptyArray(): void
     {
         //arrange

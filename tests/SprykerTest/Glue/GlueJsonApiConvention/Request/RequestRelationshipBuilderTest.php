@@ -24,9 +24,6 @@ use Spryker\Glue\GlueJsonApiConvention\Request\RequestRelationshipBuilder;
  */
 class RequestRelationshipBuilderTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testRequestRelationshipBuilder(): void
     {
         //Arrange
@@ -48,9 +45,6 @@ class RequestRelationshipBuilderTest extends Unit
         $this->assertSame($expectedIncludes[1], $glueRequestTransfer->getIncludedRelationships()[1]);
     }
 
-    /**
-     * @return void
-     */
     public function testRequestRelationshipWithoutInclude(): void
     {
         //Arrange
@@ -69,9 +63,6 @@ class RequestRelationshipBuilderTest extends Unit
         $this->assertEmpty($glueRequestTransfer->getIncludedRelationships());
     }
 
-    /**
-     * @return void
-     */
     public function testRequestRelationshipWithEmptyInclude(): void
     {
         //Arrange

@@ -17,11 +17,6 @@ class RequestSortParameterBuilder implements RequestBuilderInterface
      */
     protected const QUERY_SORT = 'sort';
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
         $queryParameters = $glueRequestTransfer->getQueryFields();

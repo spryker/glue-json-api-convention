@@ -100,9 +100,6 @@ class GlueJsonApiConventionTester extends Actor
      */
     protected const HEADER_ACCEPT = 'accept';
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function createGlueRequestTransfer(): GlueRequestTransfer
     {
         $glueRequestTransfer = (new GlueRequestTransfer())->setQueryFields([
@@ -126,9 +123,6 @@ class GlueJsonApiConventionTester extends Actor
         return $glueRequestTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function createGlueRequestTransferWithAcceptHeader(): GlueRequestTransfer
     {
         $glueRequestTransfer = (new GlueRequestTransfer())
@@ -140,9 +134,6 @@ class GlueJsonApiConventionTester extends Actor
         return $glueRequestTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     public function createGlueResponseTransfer(): GlueResponseTransfer
     {
         $glueResponseTransfer = (new GlueResponseTransfer())
@@ -153,9 +144,6 @@ class GlueJsonApiConventionTester extends Actor
         return $glueResponseTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\GlueResourceTransfer
-     */
     protected function createGlueResourceTransfer(): GlueResourceTransfer
     {
         return (new GlueResourceTransfer())
@@ -163,25 +151,16 @@ class GlueJsonApiConventionTester extends Actor
             ->setId('1');
     }
 
-    /**
-     * @return array
-     */
     public function createSchemaForamtedData(): array
     {
         return json_decode(trim($this->loadJosnFile()), true);
     }
 
-    /**
-     * @return string
-     */
     protected function loadJosnFile(): string
     {
         return file_get_contents(codecept_data_dir() . 'schema.json.example');
     }
 
-    /**
-     * @return array
-     */
     public function createOperation(): array
     {
         return [

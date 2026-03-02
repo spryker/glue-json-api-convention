@@ -17,11 +17,6 @@ class RequestSparseFieldBuilder implements RequestBuilderInterface
      */
     protected const QUERY_FIELDS = 'fields';
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestTransfer
-     */
     public function extract(GlueRequestTransfer $glueRequestTransfer): GlueRequestTransfer
     {
         $queryParameters = $glueRequestTransfer->getQueryFields();

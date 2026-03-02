@@ -44,9 +44,6 @@ class AttributesRequestBuilderPluginTest extends Unit
      */
     protected const ATTRIBUTES_SECOND_KEY = 'array_value';
 
-    /**
-     * @return void
-     */
     public function testJsonApiResponseFormatterPlugin(): void
     {
         //Arrange
@@ -64,9 +61,6 @@ class AttributesRequestBuilderPluginTest extends Unit
         $this->assertSame(static::ATTRIBUTES_SECOND_FIELD, $attributes[static::ATTRIBUTES_SECOND_KEY]);
     }
 
-    /**
-     * @return string
-     */
     protected function getContentData(): string
     {
         return json_encode([

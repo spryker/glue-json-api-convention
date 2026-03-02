@@ -34,9 +34,6 @@ class SortRequestBuilderPluginTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testSortRequestBuilderPlugin(): void
     {
         //Arrange
