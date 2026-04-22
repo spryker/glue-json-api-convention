@@ -125,7 +125,116 @@ class RelationshipResponseBuilderTest extends Unit
             ->getMock();
     }
 
-    protected function createResource(string $type, int $id): GlueResourceTransfer
+    public function testProcessIncludedDoesNotIncludeBackRelationResourcesOfIncludedResource(): void
+    {
+        // Arrange
+        $servicesType = 'services';
+        $servicePointsType = 'service-points';
+
+        // service-point with back-references to plain service stubs (no relationships on them)
+        $servicePoint = $this->createResource($servicePointsType, 'sp-1');
+        $servicePoint->addRelationship(
+            (new GlueRelationshipTransfer())
+                ->addResource($this->createResource($servicesType, 'svc-1'))
+                ->addResource($this->createResource($servicesType, 'svc-2')),
+        );
+
+        $service1 = $this->createResource($servicesType, 'svc-1');
+        $service1->addRelationship((new GlueRelationshipTransfer())->addResource($servicePoint));
+
+        $service2 = $this->createResource($servicesType, 'svc-2');
+        $service2->addRelationship((new GlueRelationshipTransfer())->addResource($servicePoint));
+
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setResource($this->createResource($servicesType, null))
+            ->setIncludedRelationships([$servicePointsType]);
+
+        // Act — test processIncluded directly to avoid loadRelationships cycling on buggy code
+        $included = $this->createRelationshipResponseBuilder()
+            ->processIncluded([$service1, $service2], $glueRequestTransfer);
+
+        // Assert — included must contain only service-points, not back-referenced services
+        $this->assertCount(1, $included);
+        $this->assertSame($servicePointsType, $included[0]->getType());
+        $this->assertSame('sp-1', $included[0]->getId());
+    }
+
+    public function testLoadRelationshipsDoesNotDuplicateRelationshipsOnIncludedResourceSharedByMultipleMainResources(): void
+    {
+        // Arrange
+        $servicesType = 'services';
+        $servicePointsType = 'service-points';
+
+        $service1 = $this->createResource($servicesType, 'svc-1');
+        $service2 = $this->createResource($servicesType, 'svc-2');
+        $servicePoint = $this->createResource($servicePointsType, 'sp-1');
+
+        $servicesByServicePointsPlugin = $this->createResourceRelationshipPluginMock();
+        $servicesByServicePointsPlugin->method('getRelationshipResourceType')->willReturn($servicesType);
+        $servicesByServicePointsPlugin->method('addRelationships')->willReturnCallback(
+            function (array $resources) use ($servicesType): void {
+                foreach ($resources as $resource) {
+                    $resource->addRelationship(
+                        (new GlueRelationshipTransfer())
+                            ->addResource((new GlueResourceTransfer())->setType($servicesType)->setId('svc-1'))
+                            ->addResource((new GlueResourceTransfer())->setType($servicesType)->setId('svc-2')),
+                    );
+                }
+            },
+        );
+
+        $servicePointsByServicesPlugin = $this->createResourceRelationshipPluginMock();
+        $servicePointsByServicesPlugin->method('getRelationshipResourceType')->willReturn($servicePointsType);
+        $servicePointsByServicesPlugin->method('addRelationships')->willReturnCallback(
+            function (array $resources) use ($servicePoint): void {
+                foreach ($resources as $resource) {
+                    $resource->addRelationship(
+                        (new GlueRelationshipTransfer())->addResource($servicePoint),
+                    );
+                }
+            },
+        );
+
+        $relationshipLoaderMock = $this->createRelationshipLoaderMock();
+        $relationshipLoaderMock->method('load')->willReturnCallback(
+            function (string $resourceType) use ($servicesType, $servicePointsType, $servicePointsByServicesPlugin, $servicesByServicePointsPlugin): array {
+                if ($resourceType === $servicesType) {
+                    return [$servicePointsByServicesPlugin];
+                }
+
+                if ($resourceType === $servicePointsType) {
+                    return [$servicesByServicePointsPlugin];
+                }
+
+                return [];
+            },
+        );
+
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setResource($this->createResource($servicesType, null))
+            ->setIncludedRelationships([$servicePointsType]);
+
+        // Act
+        $this->createRelationshipResponseBuilder($relationshipLoaderMock)
+            ->loadRelationships($servicesType, [$service1, $service2], $glueRequestTransfer);
+
+        // Assert
+        $servicesRelationshipIds = [];
+        foreach ($servicePoint->getRelationships() as $relationship) {
+            foreach ($relationship->getResources() as $resource) {
+                $servicesRelationshipIds[] = $resource->getId();
+            }
+        }
+
+        $this->assertCount(2, $servicesRelationshipIds, 'Each service must appear exactly once.');
+        $this->assertSame(
+            array_unique($servicesRelationshipIds),
+            $servicesRelationshipIds,
+            'Each service must appear exactly once in service-point relationships.',
+        );
+    }
+
+    protected function createResource(string $type, mixed $id): GlueResourceTransfer
     {
         return (new GlueResourceTransfer())
             ->setType($type)

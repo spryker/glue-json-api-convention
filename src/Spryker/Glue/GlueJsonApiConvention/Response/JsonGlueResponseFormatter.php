@@ -243,8 +243,11 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
     protected function getResourceSelfLink(array $resource, GlueRequestTransfer $glueRequestTransfer): array
     {
         $link = '';
-        foreach ($glueRequestTransfer->getParentResources() as $parentResource) {
-            $link .= sprintf('%s/%s/', $parentResource->getTypeOrFail(), $parentResource->getIdOrFail());
+
+        if (!$this->isParentResource($resource, $glueRequestTransfer)) {
+            foreach ($glueRequestTransfer->getParentResources() as $parentResource) {
+                $link .= sprintf('%s/%s/', $parentResource->getTypeOrFail(), $parentResource->getIdOrFail());
+            }
         }
 
         $link .= $resource[static::RESOURCE_TYPE];
@@ -254,6 +257,26 @@ class JsonGlueResponseFormatter implements JsonGlueResponseFormatterInterface
         $queryString = $this->buildQueryString($glueRequestTransfer);
 
         return $this->formatLinks([static::LINK_SELF => $link . $queryString]);
+    }
+
+    /**
+     * @param array<string, mixed> $resource
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return bool
+     */
+    protected function isParentResource(array $resource, GlueRequestTransfer $glueRequestTransfer): bool
+    {
+        foreach ($glueRequestTransfer->getParentResources() as $parentResource) {
+            if (
+                $parentResource->getType() === ($resource[static::RESOURCE_TYPE] ?? null)
+                && $parentResource->getId() === ($resource[static::RESOURCE_ID] ?? null)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -70,22 +70,49 @@ class RelationshipResponseBuilder implements RelationshipResponseBuilderInterfac
 
         $resources = $this->applyRelationshipPlugins($resourceName, $resources, $glueRequestTransfer);
 
-        $this->alreadyLoadedResources[$resourceName . $parentResourceId] = true;
+        $this->alreadyLoadedResources[$resourceName] = true;
+
+        $childResourcesByType = $this->collectChildResourcesByType($resources, $glueRequestTransfer);
+
+        foreach ($childResourcesByType as $childType => $childResources) {
+            $this->loadRelationships($childType, array_values($childResources), $glueRequestTransfer);
+        }
+    }
+
+    /**
+     * Collects unique child resources from all parent resources grouped by type,
+     * deduplicating instances that appear under multiple parents.
+     *
+     * @param array<\Generated\Shared\Transfer\GlueResourceTransfer> $resources
+     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
+     *
+     * @return array<string, array<string, \Generated\Shared\Transfer\GlueResourceTransfer>>
+     */
+    protected function collectChildResourcesByType(array $resources, GlueRequestTransfer $glueRequestTransfer): array
+    {
+        $childResourcesByType = [];
 
         foreach ($resources as $resource) {
             foreach ($resource->getRelationships() as $resourceRelationship) {
-                if (!$this->hasRelationship($resourceRelationship->getResources()->getArrayCopy()[0]->getTypeOrFail(), $glueRequestTransfer)) {
+                $childResources = $resourceRelationship->getResources()->getArrayCopy();
+
+                if (!$childResources) {
                     continue;
                 }
 
-                $this->loadRelationships(
-                    $resourceRelationship->getResources()->getArrayCopy()[0]->getTypeOrFail(),
-                    $resourceRelationship->getResources()->getArrayCopy(),
-                    $glueRequestTransfer,
-                    $resource->getId(),
-                );
+                $childType = $childResources[0]->getTypeOrFail();
+
+                if (!$this->hasRelationship($childType, $glueRequestTransfer)) {
+                    continue;
+                }
+
+                foreach ($childResources as $childResource) {
+                    $childResourcesByType[$childType][$childResource->getId()] = $childResource;
+                }
             }
         }
+
+        return $childResourcesByType;
     }
 
     protected function hasRelationship(string $resourceType, GlueRequestTransfer $glueRequestTransfer): bool
@@ -151,7 +178,7 @@ class RelationshipResponseBuilder implements RelationshipResponseBuilderInterfac
             foreach ($resources->getResources() as $resource) {
                 $resourceType = $resource->getTypeOrFail();
 
-                if (!$this->hasRelationship($resourceType, $glueRequestTransfer)) {
+                if (!in_array($resourceType, $glueRequestTransfer->getIncludedRelationships())) {
                     continue;
                 }
 
@@ -186,6 +213,6 @@ class RelationshipResponseBuilder implements RelationshipResponseBuilderInterfac
 
     protected function canLoadResource(string $resourceType, ?string $parentResourceId = null): bool
     {
-        return !isset($this->alreadyLoadedResources[$resourceType . $parentResourceId]);
+        return !isset($this->alreadyLoadedResources[$resourceType]);
     }
 }

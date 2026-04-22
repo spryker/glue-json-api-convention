@@ -33,8 +33,9 @@ class JsonApiConventionPlugin extends AbstractPlugin implements ConventionPlugin
 
     /**
      * {@inheritDoc}
-     * - Returns true if the `ContentType` header is present and is equal to JSON:API mime-type "application/vnd.api+json"
-     * or if the `Accept` header is present and is equal to JSON:API mime-type "application/vnd.api+json" and the request has GET type.
+     * - Returns true if the `ContentType` header is present and equals the JSON:API mime-type "application/vnd.api+json".
+     * - Returns true if the `Accept` header is present and equals the JSON:API mime-type "application/vnd.api+json" and the request has GET type.
+     * - Returns false when no explicit JSON:API header is present so that the module's native format is used.
      *
      * @api
      *

@@ -92,6 +92,44 @@ class JsonGlueResponseFormatterTest extends Unit
         $this->assertSame('1', $decodedData['data'][0]['id']);
     }
 
+    public function testFormatResponseDataGeneratesCanonicalSelfLinkForIncludedResourceThatMatchesParent(): void
+    {
+        $parentId = '910a4d20-59a3-5c49-808e-aa7038a59313';
+        $parentType = 'picking-lists';
+        $childType = 'picking-list-items';
+        $domain = 'https://glue-backend.de.spryker.local';
+
+        $parentResourceTransfer = (new GlueResourceTransfer())
+            ->setType($parentType)
+            ->setId($parentId);
+
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setResource((new GlueResourceTransfer())->setType($childType)->setId('item-uuid'))
+            ->addParentResource($parentType, $parentResourceTransfer);
+
+        $glueResponseTransfer = (new GlueResponseTransfer())
+            ->addResource((new GlueResourceTransfer())->setType($childType)->setId('item-uuid'))
+            ->addIncludedRelationship((new GlueResourceTransfer())->setType($parentType)->setId($parentId));
+
+        $configMock = $this->createMock(GlueJsonApiConventionConfig::class);
+        $configMock->method('getGlueDomain')->willReturn($domain);
+
+        $formatter = new JsonGlueResponseFormatter(
+            $this->createJsonEncoder(),
+            $configMock,
+            $this->createResponseSparseFieldFormatter(),
+        );
+
+        // Act
+        $responseData = json_decode($formatter->formatResponseData($glueResponseTransfer, [], $glueRequestTransfer), true);
+
+        // Assert — included picking-lists self link must be canonical, not parent-path-prefixed
+        $this->assertSame(
+            sprintf('%s/%s/%s', $domain, $parentType, $parentId),
+            $responseData['included'][0]['links']['self'],
+        );
+    }
+
     protected function createResponseSparseFieldFormatter(): ResponseSparseFieldFormatterInterface
     {
         return new ResponseSparseFieldFormatter();

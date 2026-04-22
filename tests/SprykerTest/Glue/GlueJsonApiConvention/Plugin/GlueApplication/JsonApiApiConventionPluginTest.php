@@ -120,6 +120,62 @@ class JsonApiApiConventionPluginTest extends Unit
         $this->assertFalse($isApplicable);
     }
 
+    public function testIsApplicableReturnsFalseForGetRequestWithoutAnyHeaders(): void
+    {
+        // Arrange
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setMethod(Request::METHOD_GET)
+            ->setMeta([]);
+
+        // Act
+        $isApplicable = $this->createJsonApiApiConventionPlugin()->isApplicable($glueRequestTransfer);
+
+        // Assert
+        $this->assertFalse($isApplicable);
+    }
+
+    public function testIsApplicableReturnsFalseForGetRequestWithNonJsonApiAcceptHeader(): void
+    {
+        // Arrange
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setMethod(Request::METHOD_GET)
+            ->setMeta([static::HEADER_ACCEPT => [static::CONTENT_TYPE]]);
+
+        // Act
+        $isApplicable = $this->createJsonApiApiConventionPlugin()->isApplicable($glueRequestTransfer);
+
+        // Assert
+        $this->assertFalse($isApplicable);
+    }
+
+    public function testIsApplicableReturnsFalseForGetRequestWithWildcardAcceptHeader(): void
+    {
+        // Arrange
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setMethod(Request::METHOD_GET)
+            ->setMeta([static::HEADER_ACCEPT => ['*/*']]);
+
+        // Act
+        $isApplicable = $this->createJsonApiApiConventionPlugin()->isApplicable($glueRequestTransfer);
+
+        // Assert
+        $this->assertFalse($isApplicable);
+    }
+
+    public function testIsApplicableReturnsFalseForGetRequestWithNonJsonApiContentType(): void
+    {
+        // Arrange
+        $glueRequestTransfer = (new GlueRequestTransfer())
+            ->setMethod(Request::METHOD_GET)
+            ->setMeta([static::HEADER_CONTENT_TYPE => [static::CONTENT_TYPE]]);
+
+        // Act
+        $isApplicable = $this->createJsonApiApiConventionPlugin()->isApplicable($glueRequestTransfer);
+
+        // Assert
+        $this->assertFalse($isApplicable);
+    }
+
     public function testJsonApiApiConventionPluginGetName(): void
     {
         // Act
