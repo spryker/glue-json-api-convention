@@ -66,6 +66,11 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
     /**
      * @var string
      */
+    protected const KEY_APPLICATION_JSON = 'application/json';
+
+    /**
+     * @var string
+     */
     protected const HTTP_METHOD_GET = 'get';
 
     /**
@@ -169,16 +174,26 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
      */
     protected function formatRequestBody(array $operation, string $resourceType): array
     {
-        if (isset($operation['requestBody']) && isset($operation['requestBody']['content'])) {
-            $contentTypes = [];
-            foreach ($operation['requestBody']['content'] as $contentType => $value) {
-                $contentTypes[(string)$contentType] = $value;
-            }
-            $operation['requestBody']['content'] = $this->addContent(
-                $contentTypes,
-                $resourceType . static::PART_REQUEST,
-            );
+        if (!isset($operation['requestBody']['content'])) {
+            return $operation;
         }
+
+        $contentTypes = [];
+        foreach ($operation['requestBody']['content'] as $contentType => $value) {
+            $contentTypes[(string)$contentType] = $value;
+        }
+
+        // Reuse the existing application/json schema for vnd.api+json to avoid undefined schema references.
+        // The vnd.api+json RestRequest schema is only generated for old Glue REST API resources,
+        // not for Backend/Storefront API resources that use different schema naming conventions.
+        if (isset($contentTypes[static::KEY_APPLICATION_JSON])) {
+            $contentTypes[GlueJsonApiConventionConfig::HEADER_CONTENT_TYPE] = $contentTypes[static::KEY_APPLICATION_JSON];
+            $operation['requestBody']['content'] = $contentTypes;
+
+            return $operation;
+        }
+
+        $operation['requestBody']['content'] = $this->addContent($contentTypes, $resourceType . static::PART_REQUEST);
 
         return $operation;
     }
@@ -192,19 +207,25 @@ class JsonApiSchemaFormatter implements SchemaFormatterInterface
      */
     protected function formatResponses(array $operation, string $resourceTypeWithConventionName, bool $isGetCollection): array
     {
-        if (isset($operation['responses'])) {
-            foreach ($operation['responses'] as $responseCode => $response) {
-                $schemaObjectName = $resourceTypeWithConventionName
-                    . ($isGetCollection ? static::PART_COLLECTION : '')
-                    . static::PART_RESPONSE;
+        if (!isset($operation['responses'])) {
+            return $operation;
+        }
 
-                if ((int)$responseCode >= Response::HTTP_BAD_REQUEST || $responseCode === static::DEFAULT_RESPONSE) {
-                    $schemaObjectName = static::ERROR_MESSAGE;
-                }
-                $response['content'] = $this->addContent($response['content'], $schemaObjectName);
-
-                $operation['responses'][$responseCode] = $response;
+        foreach ($operation['responses'] as $responseCode => $response) {
+            if (!isset($response['content'])) {
+                continue;
             }
+
+            $schemaObjectName = $resourceTypeWithConventionName
+                . ($isGetCollection ? static::PART_COLLECTION : '')
+                . static::PART_RESPONSE;
+
+            if ((int)$responseCode >= Response::HTTP_BAD_REQUEST || $responseCode === static::DEFAULT_RESPONSE) {
+                $schemaObjectName = static::ERROR_MESSAGE;
+            }
+
+            $response['content'] = $this->addContent($response['content'], $schemaObjectName);
+            $operation['responses'][$responseCode] = $response;
         }
 
         return $operation;
