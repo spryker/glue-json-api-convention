@@ -15,6 +15,7 @@ use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\JsonApiResponseFor
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\PaginationRequestBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\RelationshipRequestBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\RelationshipResponseFormatterPlugin;
+use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\ResourceTypeRequestAfterRoutingValidatorPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\SortRequestBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\SparseFieldRequestBuilderPlugin;
 use Spryker\Glue\Kernel\AbstractBundleDependencyProvider;
@@ -109,7 +110,10 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     protected function addRequestAfterRoutingValidatorPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_REQUEST_AFTER_ROUTING_VALIDATOR, function () {
-            return $this->getRequestAfterRoutingValidatorPlugins();
+            return array_merge(
+                $this->getInternalRequestAfterRoutingValidatorPlugins(),
+                $this->getRequestAfterRoutingValidatorPlugins(),
+            );
         });
 
         return $container;
@@ -180,6 +184,18 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     public function getRelationshipProviderPlugins(): array
     {
         return [];
+    }
+
+    /**
+     * @internal Should not be overwritten
+     *
+     * @return array<\Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestAfterRoutingValidatorPluginInterface>
+     */
+    protected function getInternalRequestAfterRoutingValidatorPlugins(): array
+    {
+        return [
+            new ResourceTypeRequestAfterRoutingValidatorPlugin(),
+        ];
     }
 
     /**

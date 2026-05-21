@@ -44,6 +44,20 @@ class GlueJsonApiConventionConfig extends AbstractBundleConfig
     public const ERROR_MESSAGE_UNSUPPORTED_FILTER_FORMAT = 'Unsupported `Filter` format is used. Please use `filter[resource.property]`';
 
     /**
+     * @api
+     *
+     * @var string
+     */
+    public const ERROR_CODE_INVALID_REQUEST_BODY_RESOURCE_TYPE = '012';
+
+    /**
+     * @api
+     *
+     * @var string
+     */
+    public const ERROR_MESSAGE_INVALID_REQUEST_BODY_RESOURCE_TYPE = 'Invalid type.';
+
+    /**
      * Specification:
      * - Domain name of current API application.
      *
