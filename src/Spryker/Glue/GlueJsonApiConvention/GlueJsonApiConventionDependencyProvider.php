@@ -10,6 +10,7 @@ namespace Spryker\Glue\GlueJsonApiConvention;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\External\GlueJsonApiConventionToInflectorAdapter;
 use Spryker\Glue\GlueJsonApiConvention\Dependency\Service\GlueJsonApiConventionToUtilEncodingServiceBridge;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\AttributesRequestBuilderPlugin;
+use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\AttributesRequestValidatorPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\FilterFieldRequestBuilderPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\JsonApiResponseFormatterPlugin;
 use Spryker\Glue\GlueJsonApiConvention\Plugin\GlueApplication\PaginationRequestBuilderPlugin;
@@ -101,7 +102,7 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     protected function addRequestValidatorPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_REQUEST_VALIDATOR, function () {
-            return $this->getRequestValidatorPlugins();
+            return array_merge($this->getInternalRequestValidatorPlugins(), $this->getRequestValidatorPlugins());
         });
 
         return $container;
@@ -184,6 +185,18 @@ class GlueJsonApiConventionDependencyProvider extends AbstractBundleDependencyPr
     public function getRelationshipProviderPlugins(): array
     {
         return [];
+    }
+
+    /**
+     * @internal Should not be overwritten
+     *
+     * @return array<\Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestValidatorPluginInterface>
+     */
+    protected function getInternalRequestValidatorPlugins(): array
+    {
+        return [
+            new AttributesRequestValidatorPlugin(),
+        ];
     }
 
     /**

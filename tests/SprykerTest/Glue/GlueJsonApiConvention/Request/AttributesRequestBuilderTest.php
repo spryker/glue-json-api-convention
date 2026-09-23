@@ -71,6 +71,18 @@ class AttributesRequestBuilderTest extends Unit
         $this->assertEmpty($glueRequestTransfer->getAttributes());
     }
 
+    public function testAttributesRequestBuilderWithNonArrayAttributesLeavesAttributesEmpty(): void
+    {
+        // Arrange
+        $glueRequestTransfer = (new GlueRequestTransfer())->setContent($this->getContentDataWithNonArrayAttributes());
+
+        // Act
+        $glueRequestTransfer = $this->extractAttributesRequest($glueRequestTransfer);
+
+        // Assert
+        $this->assertEmpty($glueRequestTransfer->getAttributes());
+    }
+
     public function testAttributesRequestBuilderWithContentData(): void
     {
         //Arrange
@@ -116,6 +128,15 @@ class AttributesRequestBuilderTest extends Unit
         return json_encode([
             static::ATTRIBUTES_FIRST_FIELD,
             static::ATTRIBUTES_SECOND_KEY => static::ATTRIBUTES_SECOND_FIELD,
+        ]);
+    }
+
+    protected function getContentDataWithNonArrayAttributes(): string
+    {
+        return json_encode([
+            'data' => [
+                'attributes' => static::ATTRIBUTES_SECOND_FIELD,
+            ],
         ]);
     }
 

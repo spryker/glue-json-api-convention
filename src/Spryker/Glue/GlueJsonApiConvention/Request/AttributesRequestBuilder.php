@@ -29,7 +29,7 @@ class AttributesRequestBuilder implements RequestBuilderInterface
         }
 
         $decodedContent = $this->decoder->decode($glueRequestTransfer->getContent());
-        if (!$decodedContent || !isset($decodedContent['data']) || !isset($decodedContent['data']['attributes'])) {
+        if (!$decodedContent || !isset($decodedContent['data']) || !isset($decodedContent['data']['attributes']) || !is_array($decodedContent['data']['attributes'])) {
             return $glueRequestTransfer;
         }
 

@@ -58,6 +58,16 @@ class GlueJsonApiConventionConfig extends AbstractBundleConfig
     public const ERROR_MESSAGE_INVALID_REQUEST_BODY_RESOURCE_TYPE = 'Invalid type.';
 
     /**
+     * @api
+     */
+    public const string ERROR_CODE_INVALID_REQUEST_BODY_ATTRIBUTES = '013';
+
+    /**
+     * @api
+     */
+    public const string ERROR_MESSAGE_INVALID_REQUEST_BODY_ATTRIBUTES = 'Post data is invalid.';
+
+    /**
      * Specification:
      * - Domain name of current API application.
      *

@@ -34,6 +34,7 @@ use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilder;
 use Spryker\Glue\GlueJsonApiConvention\Response\RelationshipResponseBuilderInterface;
 use Spryker\Glue\GlueJsonApiConvention\Response\ResponseSparseFieldFormatter;
 use Spryker\Glue\GlueJsonApiConvention\Response\ResponseSparseFieldFormatterInterface;
+use Spryker\Glue\GlueJsonApiConvention\Validator\Request\AttributesRequestValidator;
 use Spryker\Glue\GlueJsonApiConvention\Validator\Request\FilterRequestValidator;
 use Spryker\Glue\GlueJsonApiConvention\Validator\Request\RequestValidatorInterface;
 use Spryker\Glue\GlueJsonApiConvention\Validator\Request\ResourceTypeRequestAfterRoutingValidator;
@@ -180,6 +181,11 @@ class GlueJsonApiConventionFactory extends AbstractFactory
     public function createFilterRequestValidator(): RequestValidatorInterface
     {
         return new FilterRequestValidator();
+    }
+
+    public function createAttributesRequestValidator(): RequestValidatorInterface
+    {
+        return new AttributesRequestValidator($this->createJsonDecoder());
     }
 
     public function createResourceTypeRequestAfterRoutingValidator(): ResourceTypeRequestAfterRoutingValidatorInterface
